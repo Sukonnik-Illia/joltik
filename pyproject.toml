@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "joltik"
+version = "0.1.0"
+description = "Selling ads adapters with boost"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+SQLAlchemy = "^2.0.29"
+requests = "^2.31.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+flake8-ruff = "^0.3.0"
+pre-commit = "^3.7.0"
+Faker = "^24.14.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+line-ending = "lf"
