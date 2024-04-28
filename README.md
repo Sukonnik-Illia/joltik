@@ -1,0 +1,2 @@
+# joltik
+ Google Ads adapters
