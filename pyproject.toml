@@ -6,9 +6,11 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11,<3.13"
 SQLAlchemy = "^2.0.29"
 requests = "^2.31.0"
+ruff = "^0.4.3"
+google-ads = "^24.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
