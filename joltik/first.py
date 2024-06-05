@@ -8,7 +8,7 @@ TEST_CAMPAIN = 'customers/2109817288/campaigns/21306171816'
 TEST_AD_GROUP = 'customers/2109817288/adGroups/167931131172'
 
 
-client = GoogleAdsClient.load_from_storage("google-ads.yaml")
+client = GoogleAdsClient.load_from_storage("ref-token.json")
 customer_service = client.get_service("CustomerService")
 
 # accessible_customers = customer_service.list_accessible_customers()
