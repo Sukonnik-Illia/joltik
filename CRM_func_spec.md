@@ -63,5 +63,3 @@ Reference [CRM video](https://www.youtube.com/watch?v=Ihu9rr1wRa0).
 * cross-user tasks records
 * send e-mail
 * invoices and payment tracking
-
-
