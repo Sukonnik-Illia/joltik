@@ -1,11 +1,11 @@
 import uuid
+
 from google.ads.googleads.client import GoogleAdsClient
 
-
 TEST_CLIENT_ID = "2109817288"
-TEST_BUDGET = 'customers/2109817288/campaignBudgets/13600578687'
-TEST_CAMPAIN = 'customers/2109817288/campaigns/21306171816'
-TEST_AD_GROUP = 'customers/2109817288/adGroups/167931131172'
+TEST_BUDGET = "customers/2109817288/campaignBudgets/13600578687"
+TEST_CAMPAIN = "customers/2109817288/campaigns/21306171816"
+TEST_AD_GROUP = "customers/2109817288/adGroups/167931131172"
 
 
 client = GoogleAdsClient.load_from_storage("ref-token.json")
@@ -15,19 +15,24 @@ customer_service = client.get_service("CustomerService")
 # result_total = len(accessible_customers.resource_names)
 # print(f"Total results: {result_total}")
 
+
 # resource_names = accessible_customers.resource_names
 # for resource_name in resource_names:
 #     print(f'Customer resource name: "{resource_name}"')
-def create_ad_group(client, customer_id, campaign_resource_name):
-    """Creates ad group.
+def create_ad_group(client: str, customer_id: str, campaign_resource_name: str) -> str:
+    """
+    Creates ad group.
 
     Args:
+    ----
       client: an initialized GoogleAdsClient instance.
       customer_id: a client customer ID.
       campaign_resource_name: a campaign resource name.
 
     Returns:
+    -------
       Ad group ID.
+
     """
     ad_group_service = client.get_service("AdGroupService")
 
@@ -43,31 +48,32 @@ def create_ad_group(client, customer_id, campaign_resource_name):
 
     # Add the ad group.
     ad_group_response = ad_group_service.mutate_ad_groups(
-        customer_id=customer_id, operations=[ad_group_operation]
+        customer_id=customer_id,
+        operations=[ad_group_operation],
     )
-    ad_group_resource_name = ad_group_response.results[0].resource_name
-    print(f"Created ad group {ad_group_resource_name}.")
-    return ad_group_resource_name
+    return ad_group_response.results[0].resource_name
 
 
-def create_campaign(client, customer_id, campaign_budget):
-    """Creates campaign resource.
+def create_campaign(client: str, customer_id: str, campaign_budget: str) -> str:
+    """
+    Creates campaign resource.
 
     Args:
+    ----
       client: an initialized GoogleAdsClient instance.
       customer_id: a client customer ID.
       campaign_budget: a budget resource name.
 
     Returns:
+    -------
       Campaign resource name.
+
     """
     campaign_service = client.get_service("CampaignService")
     campaign_operation = client.get_type("CampaignOperation")
     campaign = campaign_operation.create
     campaign.name = f"Testing RSA via API {uuid.uuid4()}"
-    campaign.advertising_channel_type = (
-        client.enums.AdvertisingChannelTypeEnum.SEARCH
-    )
+    campaign.advertising_channel_type = client.enums.AdvertisingChannelTypeEnum.SEARCH
 
     # Recommendation: Set the campaign to PAUSED when creating it to prevent
     # the ads from immediately serving. Set to ENABLED once you've added
@@ -100,35 +106,38 @@ def create_campaign(client, customer_id, campaign_budget):
 
     # Add the campaign.
     campaign_response = campaign_service.mutate_campaigns(
-        customer_id=customer_id, operations=[campaign_operation]
+        customer_id=customer_id,
+        operations=[campaign_operation],
     )
-    resource_name = campaign_response.results[0].resource_name
-    print(f"Created campaign {resource_name}.")
-    return resource_name
+    return campaign_response.results[0].resource_name
 
-def create_campaign_budget(client, customer_id):
-    """Creates campaign budget resource.
+
+def create_campaign_budget(client: str, customer_id: str) -> str:
+    """
+    Creates campaign budget resource.
 
     Args:
+    ----
       client: an initialized GoogleAdsClient instance.
       customer_id: a client customer ID.
 
     Returns:
+    -------
       Campaign budget resource name.
+
     """
     # Create a budget, which can be shared by multiple campaigns.
     campaign_budget_service = client.get_service("CampaignBudgetService")
     campaign_budget_operation = client.get_type("CampaignBudgetOperation")
     campaign_budget = campaign_budget_operation.create
     campaign_budget.name = f"Our Super duper Campaign budget {uuid.uuid4()}"
-    campaign_budget.delivery_method = (
-        client.enums.BudgetDeliveryMethodEnum.STANDARD
-    )
+    campaign_budget.delivery_method = client.enums.BudgetDeliveryMethodEnum.STANDARD
     campaign_budget.amount_micros = 50000000
 
     # Add budget.
     campaign_budget_response = campaign_budget_service.mutate_campaign_budgets(
-        customer_id=customer_id, operations=[campaign_budget_operation]
+        customer_id=customer_id,
+        operations=[campaign_budget_operation],
     )
 
     return campaign_budget_response.results[0].resource_name
@@ -140,9 +149,7 @@ geo_target_constant_service = client.get_service("GeoTargetConstantService")
 country_code = "NL"
 request = geo_target_constant_service.prepare_suggest_geo_target_constants_query()
 # Request location resources with correct method
-response = geo_target_constant_service.suggest_geo_target_constants(
-    country_code=country_code
-)
+response = geo_target_constant_service.suggest_geo_target_constants(country_code=country_code)
 # Access location resources from response.results
-for geo_target_constant in response.results:
-  print(f"Location Resource Name: {geo_target_constant.resource_name}")
+# for geo_target_constant in response.results:
+#     print(f"Location Resource Name: {geo_target_constant.resource_name}")
