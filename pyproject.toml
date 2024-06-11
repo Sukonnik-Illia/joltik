@@ -11,6 +11,8 @@ SQLAlchemy = "^2.0.29"
 requests = "^2.31.0"
 google-ads = "^24.0.0"
 python-dotenv = "^1.0.1"
+psycopg2 = "^2.9.9"
+alembic = "^1.13.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.3"
@@ -30,6 +32,7 @@ line-length = 100
 select = ["ALL"]
 ignore = [
     "D100", # Missing docstring in public module
+    "D101", # Missing docstring in public class
     "D104", # Missing docstring in public package
     "D401", # First line should be in imperative mood
     "D211", # one-blank-line-before-class
