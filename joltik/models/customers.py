@@ -1,19 +1,21 @@
+from __future__ import annotations
+
 import json
 from enum import Enum
-from types import List
 
+# from typing import List
 from models.database import CrmBase
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
 
-def load_status_list(json_file: str) -> List[str]:
+def load_status_list(json_file: str) -> list[str]:
     with open(json_file) as file:
         data = json.load(file)
         return data["status_name"]
 
 
-def create_dynamic_enum(name: str, values: List[str]) -> Enum:
+def create_dynamic_enum(name: str, values: list[str]) -> Enum:
     return Enum(name, {value.upper(): value for value in values})
 
 
