@@ -1,6 +1,7 @@
-from models.database import CrmBase
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
+
+from joltik.models.database import CrmBase
 
 
 class ContactsModel(CrmBase):

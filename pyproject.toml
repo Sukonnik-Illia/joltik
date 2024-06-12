@@ -11,8 +11,10 @@ SQLAlchemy = "^2.0.29"
 requests = "^2.31.0"
 google-ads = "^24.0.0"
 python-dotenv = "^1.0.1"
-psycopg2 = "^2.9.9"
 alembic = "^1.13.1"
+pydantic = "^2.7.3"
+pydantic-settings = "^2.3.2"
+psycopg = "^3.1.19"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.3"
@@ -31,8 +33,10 @@ line-length = 100
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
+    "ANN101", # Missing type annotation for `self` in method
     "D100", # Missing docstring in public module
     "D101", # Missing docstring in public class
+    "D102", # Missing docstring in public method
     "D103", # Missing docstring in public function
     "D104", # Missing docstring in public package
     "D211", # one-blank-line-before-class
@@ -40,7 +44,9 @@ ignore = [
     "D401", # First line should be in imperative mood
     "ERA001", # Found commented-out code
     "PTH123", # `open()` should be replaced by `Path.open()`
+    "COM819", # prohibited-trailing-comma
 ]
+
 [tool.ruff.format]
 line-ending = "lf"
 

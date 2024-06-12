@@ -3,10 +3,10 @@ from __future__ import annotations
 import json
 from enum import Enum
 
-# from typing import List
-from models.database import CrmBase
 from sqlalchemy import Enum as SQLAlchemyEnum
 from sqlalchemy.orm import Mapped, mapped_column
+
+from joltik.models.database import CrmBase
 
 
 def load_status_list(json_file: str) -> list[str]:
@@ -19,7 +19,7 @@ def create_dynamic_enum(name: str, values: list[str]) -> Enum:
     return Enum(name, {value.upper(): value for value in values})
 
 
-lead_status_values = load_status_list("/home/ivan/joltik/joltik/models/lead_statuses.json")
+lead_status_values = load_status_list("./joltik/models/lead_statuses.json")
 LeadStatusEnum = create_dynamic_enum("LeadStatusEnum", lead_status_values)
 
 
