@@ -11,8 +11,10 @@ class Config(BaseSettings):
     postgres_password: str
     postgres_db: str
     postgres_host: str
+    postgres_port: int = 5432
 
     google_client_id: str
+    developer_token: str
 
     @property
     def postgres_url(self) -> PostgresDsn:

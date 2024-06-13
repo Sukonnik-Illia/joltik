@@ -2,9 +2,16 @@ from __future__ import annotations
 
 import json
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Enum as SQLAlchemyEnum
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from joltik.models.contacts import ContactsModel
+    from joltik.models.deals import DealsModel
+    from joltik.models.interactions import InteractionsModel
+
 
 from joltik.models.database import CrmBase
 
@@ -35,4 +42,10 @@ class CustomerModel(CrmBase):
         default=LeadStatusEnum.NEW,
         nullable=False,
     )
-    # can be not working properly https://stackoverflow.com/questions/76268799/how-should-i-declare-enums-in-sqlalchemy-using-mapped-column-to-enable-type-hin
+    # enum can be not working properly https://stackoverflow.com/questions/76268799/how-should-i-declare-enums-in-sqlalchemy-using-mapped-column-to-enable-type-hin
+    contacts: Mapped[list[ContactsModel]] = relationship(back_populates="customer", uselist=True)
+    deals: Mapped[list[DealsModel]] = relationship(back_populates="customer", uselist=True)
+    interactions: Mapped[list[InteractionsModel]] = relationship(
+        back_populates="customer",
+        uselist=True,
+    )
