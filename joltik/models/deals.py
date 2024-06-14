@@ -3,9 +3,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 from sqlalchemy import ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
+    import uuid
+
     from joltik.models.contacts import ContactsModel
     from joltik.models.customers import CustomerModel
     from joltik.models.services import ServicesModel
@@ -25,10 +28,10 @@ class DealsModel(CrmBase):
     comments: Mapped[str] = mapped_column()
 
     contact: Mapped[ContactsModel] = relationship(back_populates="deals", uselist=False)
-    contact_fk: Mapped[int] = mapped_column(ForeignKey("contact_persons.id"), nullable=False)
+    contact_fk: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("contacts.id"))
 
     service: Mapped[ServicesModel] = relationship(back_populates="deals", uselist=False)
-    service_fk: Mapped[int] = mapped_column(ForeignKey("services.id"), nullable=False)
+    service_fk: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("services.id"))
 
     customer: Mapped[CustomerModel] = relationship(back_populates="deals", uselist=False)
-    customer_fk: Mapped[int] = mapped_column(ForeignKey("customers.id"), nullable=False)
+    customer_fk: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("customers.id"))

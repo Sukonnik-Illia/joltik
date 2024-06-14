@@ -1,9 +1,9 @@
-# from models.database import CrmBase
-# from sqlalchemy import create_engine
-# from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
-# engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
+from joltik.models.database import CrmBase
 
-# with Session(engine) as session:
-#     # with session.begin():
-#     CrmBase.metadata.create_all(engine)
+engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
+
+with Session(engine) as session:
+    CrmBase.metadata.create_all(engine)
