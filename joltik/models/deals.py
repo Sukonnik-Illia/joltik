@@ -15,8 +15,8 @@ if TYPE_CHECKING:
 
 from joltik.models.database import CrmBase
 
-Deal_type = Literal["New business", "Recurring services", "New to excisting client"]
-Deal_stage = Literal["Connect", "Propose", "Win", "Lose"]
+Deal_type = Literal["New business", "Existing Business"]
+Deal_stage = Literal["Prospecting", "Qualified", "Negotiation", "Won", "Lost"]
 
 
 class DealsModel(CrmBase):
