@@ -33,8 +33,8 @@ class InteractionsModel(CrmBase):
 
 class InteractionContacts(CrmBase):
     __tablename__ = "interactions_contacts"
-    interactions_fk: Mapped[uuid.UUID] = mapped_column(
+    interactions_fk: Mapped[UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("interactions.id"),
     )
-    contacts_fk: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("contacts.id"))
+    contacts_fk: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("contacts.id"))

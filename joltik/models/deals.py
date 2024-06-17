@@ -28,7 +28,7 @@ class DealsModel(CrmBase):
     comments: Mapped[str] = mapped_column()
 
     contact: Mapped[ContactsModel] = relationship(back_populates="deals", uselist=False)
-    contact_fk: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("contacts.id"))
+    contact_fk: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("contacts.id"))
 
     service: Mapped[ServicesModel] = relationship(back_populates="deals", uselist=False)
     service_fk: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("services.id"))
