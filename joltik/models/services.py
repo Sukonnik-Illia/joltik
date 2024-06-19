@@ -7,13 +7,13 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from joltik.models.database import CrmBase
 
 if TYPE_CHECKING:
-    from joltik.models.deals import DealsModel
+    from joltik.models.deals import Deals
 
 Service = Literal["SEO", "PPC", "SMM", "Creatives"]
 
 
-class ServicesModel(CrmBase):
+class Services(CrmBase):
     __tablename__ = "services"
     service_type: Mapped[Service]
     description: Mapped[str] = mapped_column(nullable=False)
-    deals: Mapped[list[DealsModel]] = relationship(back_populates="service", uselist=True)
+    deals: Mapped[list[Deals]] = relationship(back_populates="service", uselist=True)

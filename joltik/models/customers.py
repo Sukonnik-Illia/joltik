@@ -6,9 +6,9 @@ from typing import TYPE_CHECKING, Literal
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
-    from joltik.models.contacts import ContactsModel
-    from joltik.models.deals import DealsModel
-    from joltik.models.interactions import InteractionsModel
+    from joltik.models.contacts import Contacts
+    from joltik.models.deals import Deals
+    from joltik.models.interactions import Interactions
 
 
 from joltik.models.database import CrmBase
@@ -28,7 +28,7 @@ def load_status_list(json_file: str) -> list[str]:
 LeadStatusEnum = Literal["New", "Connected", "Proposal", "Client", "Lost"]
 
 
-class CustomerModel(CrmBase):
+class Customer(CrmBase):
     __tablename__ = "customers"
     company_name: Mapped[str] = mapped_column(nullable=False)
     industry: Mapped[str] = mapped_column(nullable=False)
@@ -43,9 +43,9 @@ class CustomerModel(CrmBase):
     # )
 
     # enum can be not working properly https://stackoverflow.com/questions/76268799/how-should-i-declare-enums-in-sqlalchemy-using-mapped-column-to-enable-type-hin
-    contacts: Mapped[list[ContactsModel]] = relationship(back_populates="customer", uselist=True)
-    deals: Mapped[list[DealsModel]] = relationship(back_populates="customer", uselist=True)
-    interactions: Mapped[list[InteractionsModel]] = relationship(
+    contacts: Mapped[list[Contacts]] = relationship(back_populates="customer", uselist=True)
+    deals: Mapped[list[Deals]] = relationship(back_populates="customer", uselist=True)
+    interactions: Mapped[list[Interactions]] = relationship(
         back_populates="customer",
         uselist=True,
     )

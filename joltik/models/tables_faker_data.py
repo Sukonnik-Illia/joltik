@@ -5,22 +5,22 @@ from typing import Union
 from faker import Faker
 
 from joltik.helpers import SERVICE
-from joltik.models.contacts import ContactsModel
-from joltik.models.customers import CustomerModel
-from joltik.models.deals import DealsModel
-from joltik.models.interactions import InteractionContacts, InteractionsModel
-from joltik.models.services import ServicesModel
+from joltik.models.contacts import Contacts
+from joltik.models.customers import Customer
+from joltik.models.deals import Deals
+from joltik.models.interactions import InteractionContacts, Interactions
+from joltik.models.services import Services
 
 fake = Faker()
 # Faker.seed(1234)
 
 
-def generate_customer() -> CustomerModel:
+def generate_customer() -> Customer:
     company_name = fake.company()
     email_username = re.sub(r"\W+", "", company_name).lower()
     email = f"{email_username}@{email_username}.com"
 
-    return CustomerModel(
+    return Customer(
         id=uuid.uuid4(),
         company_name=company_name,
         industry=fake.bs(),
@@ -33,7 +33,7 @@ def generate_customer() -> CustomerModel:
     )
 
 
-def generate_contact(customer: Union[CustomerModel, None] = None) -> ContactsModel:
+def generate_contact(customer: Union[Customer, None] = None) -> Contacts:
     if customer is None:
         customer = generate_customer()
 
@@ -43,7 +43,7 @@ def generate_contact(customer: Union[CustomerModel, None] = None) -> ContactsMod
     email_domain = re.sub(r"\W+", "", company_name).lower()
     email = f"{first_name.lower()}.{last_name.lower()}@{email_domain}.com"
 
-    return ContactsModel(
+    return Contacts(
         id=uuid.uuid4(),
         first_name=first_name,
         last_name=last_name,
@@ -56,11 +56,11 @@ def generate_contact(customer: Union[CustomerModel, None] = None) -> ContactsMod
 
 
 def generate_interaction(
-    customer: Union[CustomerModel, None] = None,
-    contacts: Union[ContactsModel, list[ContactsModel], None] = None,
+    customer: Union[Customer, None] = None,
+    contacts: Union[Contacts, list[Contacts], None] = None,
     num_interactions: int = 1,
-) -> tuple[Union[list[InteractionsModel], list[InteractionContacts]]]:
-    if isinstance(contacts, ContactsModel):
+) -> tuple[Union[list[Interactions], list[InteractionContacts]]]:
+    if isinstance(contacts, Contacts):
         contacts = [contacts]
 
     # if customer is none, but contacts provided, then customer is taken from contacts
@@ -81,7 +81,7 @@ def generate_interaction(
     interactions_contacts_list = []
 
     for _ in range(num_interactions):
-        interaction = InteractionsModel(
+        interaction = Interactions(
             id=uuid.uuid4(),
             date=fake.date_between(start_date="-1y", end_date="today").strftime("%Y%m%d"),
             type=fake.random_element(elements=("Call", "Email", "Meeting")),
@@ -100,15 +100,15 @@ def generate_interaction(
     return interactions, interactions_contacts_list
 
 
-def import_services() -> list[ServicesModel]:
-    return [ServicesModel(**service_dict) for service_dict in SERVICE]
+def import_services() -> list[Services]:
+    return [Services(**service_dict) for service_dict in SERVICE]
 
 
 def generate_deal(
-    service: Union[ServicesModel, None] = None,
-    customer: Union[CustomerModel, None] = None,
-    contact: Union[ContactsModel, None] = None,
-) -> DealsModel:
+    service: Union[Services, None] = None,
+    customer: Union[Customer, None] = None,
+    contact: Union[Contacts, None] = None,
+) -> Deals:
     if service is None:
         services = import_services()
         service = fake.random_element(services)
@@ -124,7 +124,7 @@ def generate_deal(
         if not contact:
             contact = generate_contact(customer)
 
-    return DealsModel(
+    return Deals(
         id=uuid.uuid4(),
         deal_name=fake.catch_phrase(),
         deal_type=fake.random_element(elements=("New business", "Existing Business")),

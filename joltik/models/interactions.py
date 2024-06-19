@@ -7,22 +7,22 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
-    from joltik.models.contacts import ContactsModel
-    from joltik.models.customers import CustomerModel
+    from joltik.models.contacts import Contacts
+    from joltik.models.customers import Customer
 
 from joltik.models.database import CrmBase
 
 
-class InteractionsModel(CrmBase):
+class Interactions(CrmBase):
     __tablename__ = "interactions"
     date: Mapped[int] = mapped_column(nullable=False)
     type: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column()
 
-    customer: Mapped[CustomerModel] = relationship(back_populates="interactions", uselist=False)
+    customer: Mapped[Customer] = relationship(back_populates="interactions", uselist=False)
     customer_fk: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("customers.id"))
 
-    contacts: Mapped[list[ContactsModel]] = relationship(
+    contacts: Mapped[list[Contacts]] = relationship(
         back_populates="interactions",
         uselist=True,
         secondary="interactions_contacts",

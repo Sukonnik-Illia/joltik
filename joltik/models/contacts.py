@@ -7,15 +7,15 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
-    from joltik.models.customers import CustomerModel
-    from joltik.models.deals import DealsModel
-    from joltik.models.interactions import InteractionsModel
+    from joltik.models.customers import Customer
+    from joltik.models.deals import Deals
+    from joltik.models.interactions import Interactions
 
 from joltik.models.database import CrmBase
 from joltik.models.interactions import InteractionContacts
 
 
-class ContactsModel(CrmBase):
+class Contacts(CrmBase):
     __tablename__ = "contacts"
     first_name: Mapped[str] = mapped_column(nullable=False)
     last_name: Mapped[str] = mapped_column(nullable=False)
@@ -24,10 +24,10 @@ class ContactsModel(CrmBase):
     phone_number: Mapped[str] = mapped_column()
     comment: Mapped[str] = mapped_column()
 
-    customer: Mapped[CustomerModel] = relationship(back_populates="contacts", uselist=False)
+    customer: Mapped[Customer] = relationship(back_populates="contacts", uselist=False)
     customer_fk: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("customers.id"))
-    deals: Mapped[list[DealsModel]] = relationship(back_populates="contact", uselist=True)
-    interactions: Mapped[list[InteractionsModel]] = relationship(
+    deals: Mapped[list[Deals]] = relationship(back_populates="contact", uselist=True)
+    interactions: Mapped[list[Interactions]] = relationship(
         back_populates="contacts",
         uselist=True,
         secondary=InteractionContacts.__tablename__,

@@ -1,7 +1,7 @@
 # from sqlalchemy.orm import Mapped, mapped_column, Enum
 # from models.database import CrmBase
 
-# class LeadStatusModel(CrmBase):
+# class LeadStatus(CrmBase):
 #     __tablename__ = "lead_status"
 #     status_name: Mapped[str] = mapped_column(nullable=False)
 
@@ -11,6 +11,6 @@
 #         return (json.load(file))
 
 # def add_statuses(session, statuses_data):
-#     statuses = [LeadStatusModel(**data) for data in statuses_data]
+#     statuses = [LeadStatus(**data) for data in statuses_data]
 #     session.bulk_save_objects(statuses)
 #     session.commit()
