@@ -3,4 +3,3 @@ ref-token.json
 *.pyc
 .env
 .ruff_cache
-tables_faker_data.py
