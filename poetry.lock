@@ -226,6 +226,17 @@ files = [
 ]
 
 [[package]]
+name = "git-filter-repo"
+version = "2.38.0"
+description = "Quickly rewrite git repository history"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "git-filter-repo-2.38.0.tar.gz", hash = "sha256:fe1753e18f0bd6d3c9b57868c8011ae7d056a6ebab706706396a15ef5312725e"},
+    {file = "git_filter_repo-2.38.0-py2.py3-none-any.whl", hash = "sha256:c2646206dfdbf06ce27c06c5b77ea33209d8e32d1e33f6bd4c25b1ccc59f9864"},
+]
+
+[[package]]
 name = "google-ads"
 version = "24.1.0"
 description = "Client library for the Google Ads API"
@@ -1247,4 +1258,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.13"
-content-hash = "f0adf0e6ffc924594cbdbbbd95b5fe3c3939ecfaf6658ab0e143fc957a5d11d9"
+content-hash = "8962114a9a078198360ed9335dfe475d85fd3f45b54c8d60d8379f7831467385"
