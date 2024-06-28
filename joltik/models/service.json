@@ -1,0 +1,50 @@
+[
+    {
+        "service_type": "SEO",
+        "description": "Optimize your website to rank higher in search engine results and attract more organic traffic."
+    },
+    {
+        "service_type": "SEO",
+        "description": "Conduct keyword research, on-page and off-page optimization, and technical SEO audits."
+    },
+    {
+        "service_type": "SEO",
+        "description": "Improve site structure, load speed, and mobile-friendliness to enhance user experience and SEO performance."
+    },
+    {
+        "service_type": "PPC",
+        "description": "Create and manage pay-per-click campaigns to drive targeted traffic to your website."
+    },
+    {
+        "service_type": "PPC",
+        "description": "Develop ad strategies, conduct keyword research, and optimize ads for maximum ROI."
+    },
+    {
+        "service_type": "PPC",
+        "description": "Monitor and adjust bids, analyze performance data, and improve ad copy to boost campaign effectiveness."
+    },
+    {
+        "service_type": "SMM",
+        "description": "Manage your social media profiles and create engaging content to grow your online presence."
+    },
+    {
+        "service_type": "SMM",
+        "description": "Develop social media strategies, schedule posts, and interact with your audience."
+    },
+    {
+        "service_type": "SMM",
+        "description": "Analyze social media metrics, track campaign performance, and optimize content for better engagement."
+    },
+    {
+        "service_type": "Creatives",
+        "description": "Produce high-quality display images and videos to enhance your digital marketing campaigns."
+    },
+    {
+        "service_type": "Creatives",
+        "description": "Develop creative concepts, design graphics, and create compelling video content."
+    },
+    {
+        "service_type": "Creatives",
+        "description": "Optimize visual content for various platforms and formats to reach your target audience effectively."
+    }
+]
