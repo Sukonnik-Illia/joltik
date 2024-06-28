@@ -13,7 +13,7 @@ from joltik.models.database import CrmBase
 # access to the values within the .ini file in use.
 config = context.config
 joltik_settings = Config()
-config.set_main_option("sqlalchemy.url", str(joltik_settings.postgres_url))
+config.set_main_option("sqlalchemy.url", joltik_settings.postgres_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

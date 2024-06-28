@@ -16,6 +16,8 @@ pydantic = "^2.7.3"
 pydantic-settings = "^2.3.2"
 psycopg = "^3.1.19"
 git-filter-repo = "^2.38.0"
+fastapi = "^0.111.0"
+pytest = "^8.2.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.3"
@@ -23,6 +25,8 @@ pytest = "^8.2.0"
 flake8-ruff = "^0.3.0"
 pre-commit = "^3.7.0"
 Faker = "^24.14.0"
+sqlalchemy-utils = "^0.41.2"
+pytest-env = "^1.1.3"
 
 [build-system]
 requires = ["poetry-core"]
@@ -41,6 +45,7 @@ ignore = [
     "D102", # Missing docstring in public method
     "D103", # Missing docstring in public function
     "D104", # Missing docstring in public package
+    "D106", # Missing docstring in public nested class
     "D211", # one-blank-line-before-class
     "D212", # multi-line-summary-second-line
     "D400", # First line should end with a period
@@ -58,3 +63,12 @@ line-ending = "lf"
 [tool.ruff.lint.per-file-ignores]
 # Ignore F401,F403 (import violations) in all __init__.py files.
 "__init__.py" = ["F403", "F401"]
+"tests/*" = ["S101"]
+
+
+[tool.pytest_env]
+ENVIRONMENT="unittest"
+
+[tool.ruff.lint.flake8-bugbear]
+# Allow default arguments like, e.g., `data: List[str] = fastapi.Query(None)`.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
