@@ -49,3 +49,19 @@ def list_one(service_id: UUID, db: Session = Depends(get_db)) -> ServiceResponse
     if service is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return service
+
+
+@router.put("/{service_id}", status_code=status.HTTP_202_ACCEPTED)
+def update_service(
+    service_id: UUID,
+    service_update: ServiceCreate,
+    db: Session = Depends(get_db),
+) -> ServiceResponse:
+    service = db.query(Services).filter(Services.id == service_id).first()
+    if service is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    service.service_type = service_update.service_type  # ENUM, need check for Unprocessable Entity
+    service.description = service_update.description
+    db.commit()
+    db.refresh(service)
+    return service

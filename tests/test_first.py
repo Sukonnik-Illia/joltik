@@ -13,6 +13,7 @@ def test_CRUD(client) -> None:  # noqa: N802, ANN001
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == []
 
+    # Test for post service
     resp = client.post(
         "/service",
         json={
@@ -27,11 +28,20 @@ def test_CRUD(client) -> None:  # noqa: N802, ANN001
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == [returned_service]
 
+    # Test for get one service by id
     service_id = returned_service.get("id")
     resp = client.get(f"/service/{service_id}")
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == returned_service
-
     nonexistent_id = uuid4()
     resp = client.get(f"/service/{nonexistent_id}")
     assert resp.status_code == status.HTTP_404_NOT_FOUND
+
+    # Test for update service by id
+    service_id = returned_service.get("id")
+    update_service = {"service_type": "PPC", "description": "Updated PPC service description"}
+    resp = client.put(f"/service/{service_id}", json=update_service)
+    assert resp.status_code == status.HTTP_202_ACCEPTED
+    updated_service = client.get(f"/service/{service_id}").json()
+    update_service = {"id": service_id, **update_service}
+    assert updated_service == update_service
