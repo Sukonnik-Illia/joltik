@@ -8,7 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from joltik.models.contacts import Contacts
-    from joltik.models.customers import Customer
+    from joltik.models.customers import Customers
     from joltik.models.services import Services
 
 from joltik.models.database import CrmBase
@@ -31,5 +31,5 @@ class Deals(CrmBase):
     service: Mapped[Services] = relationship(back_populates="deals", uselist=False)
     service_fk: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("services.id"))
 
-    customer: Mapped[Customer] = relationship(back_populates="deals", uselist=False)
+    customer: Mapped[Customers] = relationship(back_populates="deals", uselist=False)
     customer_fk: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("customers.id"))
