@@ -60,7 +60,7 @@ def update_service(
     service = db.query(Services).filter(Services.id == service_id).first()
     if service is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    service.service_type = service_update.service_type  # ENUM, need check for Unprocessable Entity
+    service.service_type = service_update.service_type  # ENUM, check for Unprocessable Entity?
     service.description = service_update.description
     db.commit()
     db.refresh(service)
