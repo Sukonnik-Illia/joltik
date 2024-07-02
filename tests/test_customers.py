@@ -12,7 +12,7 @@ def customer_to_pydantic(customer: Customers) -> CustomerResponse:
 
 
 customer_example = generate_customer()
-customer_example = customer_to_pydantic(customer_example).model_dump()
+customer_example = customer_to_pydantic(customer_example).model_dump(mode="json")
 del customer_example["id"]
 
 
@@ -41,7 +41,7 @@ def test_customers_CRUD(client) -> None:  # noqa: N802, ANN001
 
     # Test for UPDATE customer info
     update_customer = generate_customer()
-    update_customer = customer_to_pydantic(update_customer).model_dump()
+    update_customer = customer_to_pydantic(update_customer).model_dump(mode="json")
     del update_customer["id"]
 
     customer_id = returned_customer.get("id")
@@ -53,11 +53,11 @@ def test_customers_CRUD(client) -> None:  # noqa: N802, ANN001
     resp = client.put(f"/customer/{nonexistent_id}", json=update_customer)
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
-    # Test for DELETE service by id
+    # Test for DELETE customer by id
     customer_id = returned_customer.get("id")
     resp = client.delete(f"/customer/{customer_id}")
     assert resp.status_code == status.HTTP_200_OK
     resp = client.get(f"/customer/{customer_id}")
     assert resp.status_code == status.HTTP_404_NOT_FOUND
-    resp = client.delete(f"/customer/{customer_id}")
+    resp = client.delete(f"/customer/{nonexistent_id}")
     assert resp.status_code == status.HTTP_404_NOT_FOUND
