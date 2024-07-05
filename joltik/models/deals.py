@@ -20,8 +20,8 @@ Deal_stage = Literal["Prospecting", "Qualified", "Negotiation", "Won", "Lost"]
 class Deals(CrmBase):
     __tablename__ = "deals"
     deal_name: Mapped[str] = mapped_column(nullable=False)
-    deal_type = Mapped[Deal_type]
-    stage = Mapped[Deal_stage]
+    deal_type: Mapped[Deal_type]
+    stage: Mapped[Deal_stage]
     ammount: Mapped[int] = mapped_column(nullable=False)
     comments: Mapped[str] = mapped_column()
 

@@ -124,16 +124,16 @@ def update_interaction(  # noqa: C901, PLR0912
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Interaction not found")
         # raise custom exception
 
-    update_inter_dict = updated_interaction_pyd.model_dump(exclude_unset=True)
+    updated_inter_dict = updated_interaction_pyd.model_dump(exclude_unset=True)
 
     # Update the customer first
-    if "customer_fk" in update_inter_dict:
+    if "customer_fk" in updated_inter_dict:
         customer = (
-            db.query(Customers).filter(Customers.id == update_inter_dict["customer_fk"]).first()
+            db.query(Customers).filter(Customers.id == updated_inter_dict["customer_fk"]).first()
         )
         if not customer:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
-        interaction.customer_fk = update_inter_dict["customer_fk"]
+        interaction.customer_fk = updated_inter_dict["customer_fk"]
 
         db.commit()
         db.refresh(interaction)
@@ -163,10 +163,10 @@ def update_interaction(  # noqa: C901, PLR0912
                 contacts_fk=contact_id,
             )
             db.add(interaction_contact)
-        del update_inter_dict["contacts"]
+        del updated_inter_dict["contacts"]
 
     # Validate and update contacts when customer hasn't changed
-    if "customer_fk" not in update_inter_dict and "contacts" in update_inter_dict:
+    if "customer_fk" not in updated_inter_dict and "contacts" in updated_inter_dict:
         contact_ids = [contact.id for contact in updated_interaction_pyd.contacts]
         existing_contacts = db.query(Contacts).filter(Contacts.id.in_(contact_ids)).all()
         if len(existing_contacts) != len(contact_ids):
@@ -191,10 +191,10 @@ def update_interaction(  # noqa: C901, PLR0912
                 contacts_fk=contact_id,
             )
             db.add(interaction_contact)
-        del update_inter_dict["contacts"]
+        del updated_inter_dict["contacts"]
 
     # Update other fields
-    for key, value in update_inter_dict.items():
+    for key, value in updated_inter_dict.items():
         setattr(interaction, key, value)
 
     db.commit()
