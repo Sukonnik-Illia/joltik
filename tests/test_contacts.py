@@ -19,9 +19,9 @@ def test_contacts_CRUD(client) -> None:  # noqa: N802, ANN001
 
     # Test for POST contact
     customer1_sqla = generate_customer()
-    customer_dict = customer_to_pydantic(customer1_sqla).model_dump(mode="json")
-    customer_pyd = client.post("/customer", json=customer_dict)
-    customer1_sqla.id = customer_pyd.json()["id"]
+    customer1_dict = customer_to_pydantic(customer1_sqla).model_dump(mode="json")
+    customer1_pyd = client.post("/customer", json=customer1_dict)
+    customer1_sqla.id = customer1_pyd.json()["id"]
 
     contact_sqla = generate_contact(customer1_sqla)
     contact_dict = contact_to_pydantic(contact_sqla).model_dump(mode="json")
@@ -87,3 +87,6 @@ def test_contacts_CRUD(client) -> None:  # noqa: N802, ANN001
 
     # delete customer at the end of the test
     resp = client.delete(f"/customer/{customer1_sqla.id}")
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
+    resp = client.delete(f"/customer/{customer2_sqla.id}")
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
