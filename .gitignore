@@ -1,6 +1,7 @@
 client_secret.json
 ref-token.json
 *.pyc
+__pycache__/
 .env
 .ruff_cache
 temp.py
