@@ -76,7 +76,7 @@ def update_customer(
     return customer
 
 
-@router.delete("/{customer_id}")
+@router.delete("/{customer_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_customer(customer_id: UUID, db: Session = Depends(get_db)) -> None:
     customer = db.query(Customers).filter(Customers.id == customer_id).first()
     if customer is None:

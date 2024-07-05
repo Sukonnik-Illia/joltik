@@ -68,7 +68,7 @@ def update_service(
     return service
 
 
-@router.delete("/{service_id}")
+@router.delete("/{service_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_service(service_id: UUID, db: Session = Depends(get_db)) -> None:
     service = db.query(Services).filter(Services.id == service_id).first()
     if service is None:

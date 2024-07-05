@@ -56,7 +56,7 @@ def test_customers_CRUD(client) -> None:  # noqa: N802, ANN001
     # Test for DELETE customer by id
     customer_id = returned_customer.get("id")
     resp = client.delete(f"/customer/{customer_id}")
-    assert resp.status_code == status.HTTP_200_OK
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
     resp = client.get(f"/customer/{customer_id}")
     assert resp.status_code == status.HTTP_404_NOT_FOUND
     resp = client.delete(f"/customer/{nonexistent_id}")

@@ -51,7 +51,7 @@ def test_services_CRUD(client) -> None:  # noqa: N802, ANN001
     # Test for DELETE service by id
     service_id = returned_service.get("id")
     resp = client.delete(f"/service/{service_id}")
-    assert resp.status_code == status.HTTP_200_OK
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
     resp = client.get(f"/service/{service_id}")
     assert resp.status_code == status.HTTP_404_NOT_FOUND
     resp = client.delete(f"/service/{nonexistent_id}")
