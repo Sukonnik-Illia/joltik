@@ -137,9 +137,3 @@ def generate_deal(
         customer=customer,
         contact=contact,
     )
-
-
-# fake_customer = generate_customer()
-# fake_contact = generate_contact(fake_customer)
-# fake_deal = generate_deal(customer=fake_customer, contact=fake_contact)
-# print(fake_deal)

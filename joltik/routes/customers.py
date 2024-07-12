@@ -1,11 +1,11 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from sqlalchemy import select
 
-from joltik.db import get_db
+from joltik.db import DBAsyncSession
 from joltik.models import Customers
 from joltik.models.customers import LeadStatus
 
@@ -29,16 +29,18 @@ class CustomerResponse(CustomerCreate):
 
 
 @router.get("/")
-def list_all(db: Session = Depends(get_db)) -> list[CustomerResponse]:
-    return db.query(Customers).all()
+async def list_all_customers(db: DBAsyncSession) -> list[CustomerResponse]:
+    result = await db.execute(select(Customers))
+    return result.scalars().all()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_customer(customer: CustomerCreate, db: Session = Depends(get_db)) -> CustomerResponse:
-    new_customer = Customers(**jsonable_encoder(customer))
-    db.add(new_customer)
-    db.commit()
-    return new_customer
+async def create_customer(customer_pyd: CustomerCreate, db: DBAsyncSession) -> CustomerResponse:
+    new_customer_sqla = Customers(**jsonable_encoder(customer_pyd))
+    db.add(new_customer_sqla)
+    await db.commit()
+    await db.refresh(new_customer_sqla)
+    return new_customer_sqla
 
 
 # {
@@ -52,34 +54,34 @@ def create_customer(customer: CustomerCreate, db: Session = Depends(get_db)) -> 
 
 
 @router.get("/{customer_id}", response_model=CustomerResponse)
-def list_one(customer_id: UUID, db: Session = Depends(get_db)) -> CustomerResponse:
-    customer = db.query(Customers).filter(Customers.id == customer_id).first()
+async def select_customer(customer_id: UUID, db: DBAsyncSession) -> CustomerResponse:
+    customer = await db.get(Customers, customer_id)
     if customer is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return customer
 
 
 @router.put("/{customer_id}", status_code=status.HTTP_202_ACCEPTED)
-def update_customer(
+async def update_customer(
     customer_id: UUID,
-    customer_update: CustomerCreate,
-    db: Session = Depends(get_db),
+    updated_customer_pyd: CustomerCreate,
+    db: DBAsyncSession,
 ) -> CustomerResponse:
-    customer = db.query(Customers).filter(Customers.id == customer_id).first()
-    if customer is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    update_data = customer_update.model_dump(exclude_unset=True)
-    for key, value in update_data.items():
-        setattr(customer, key, value)
-    db.commit()
-    db.refresh(customer)
-    return customer
+    customer_sqla = await db.get(Customers, customer_id)
+    if not customer_sqla:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
+    update_customer_dict = updated_customer_pyd.model_dump(mode="json", exclude_unset=True)
+    for key, value in update_customer_dict.items():
+        setattr(customer_sqla, key, value)
+    await db.commit()
+    await db.refresh(customer_sqla)
+    return customer_sqla
 
 
 @router.delete("/{customer_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_customer(customer_id: UUID, db: Session = Depends(get_db)) -> None:
-    customer = db.query(Customers).filter(Customers.id == customer_id).first()
-    if customer is None:
+async def delete_customer(customer_id: UUID, db: DBAsyncSession) -> None:
+    customer_sqla = await db.get(Customers, customer_id)
+    if customer_sqla is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    db.delete(customer)
-    db.commit()
+    await db.delete(customer_sqla)
+    await db.commit()

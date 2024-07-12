@@ -1,11 +1,12 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
-from joltik.db import get_db
+from joltik.db import DBAsyncSession
 from joltik.errors import EntityDoesNotExistError
 from joltik.models import Contacts, Customers, Deals, Services
 from joltik.models.deals import Deal_stage, Deal_type
@@ -49,16 +50,29 @@ class DealResponse(DealCreate):
 
 
 @router.get("/")
-def list_deals(db: Session = Depends(get_db)) -> List[DealResponse]:
-    return db.query(Deals).all()
+async def list_all_deals(db: DBAsyncSession) -> List[DealResponse]:
+    result = await db.execute(
+        select(Deals).options(
+            selectinload(Deals.customer),
+            selectinload(Deals.contact),
+            selectinload(Deals.service),
+        ),
+    )
+    return result.scalars().all()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_deal(deal: DealCreate, db: Session = Depends(get_db)) -> DealResponse:
-    customer = db.query(Customers).filter(Customers.id == deal.customer_fk).first()
+async def create_deal(deal: DealCreate, db: DBAsyncSession) -> DealResponse:
+    customer = await db.execute(select(Customers).filter(Customers.id == deal.customer_fk))
+    customer = customer.scalars().first()
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
-    contact = db.query(Contacts).filter(Contacts.id == deal.contact_fk).first()
+    contact = await db.execute(
+        select(Contacts)
+        .options(selectinload(Contacts.customer))
+        .filter(Contacts.id == deal.contact_fk),
+    )
+    contact = contact.scalars().first()
     if not contact:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
     if contact.customer_fk != deal.customer_fk:
@@ -66,62 +80,97 @@ def create_deal(deal: DealCreate, db: Session = Depends(get_db)) -> DealResponse
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="One or more contacts do not belong to the specified customer",
         )
-    service = db.query(Services).filter(Services.id == deal.service_fk).first()
+
+    service = await db.execute(select(Services).filter(Services.id == deal.service_fk))
+    service = service.scalars().first()
     if not service:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
 
     new_deal_dict = deal.model_dump(mode="json")
     new_deal_sqla = Deals(**new_deal_dict)
     db.add(new_deal_sqla)
-    db.commit()
+    await db.commit()
+    await db.refresh(new_deal_sqla)
+
+    await new_deal_sqla.awaitable_attrs.customer
+    await new_deal_sqla.awaitable_attrs.contact
+    await new_deal_sqla.awaitable_attrs.service
+
     return new_deal_sqla
 
 
 @router.get("/{deal_id}")
-def get_one_deal(deal_id: UUID, db: Session = Depends(get_db)) -> DealResponse:
-    deal = db.query(Deals).filter(Deals.id == deal_id).first()
+async def select_deal(deal_id: UUID, db: DBAsyncSession) -> DealResponse:
+    result = await db.execute(
+        select(Deals)
+        .options(
+            selectinload(Deals.customer),
+            selectinload(Deals.contact),
+            selectinload(Deals.service),
+        )
+        .filter(Deals.id == deal_id),
+    )
+    deal = result.scalars().first()
     if not deal:
         raise EntityDoesNotExistError
     return deal
 
 
 @router.put("/{deal_id}")
-def update_deal(  # noqa: C901
+async def update_deal(  # noqa: C901
     deal_id: UUID,
     updated_deal_pyd: DealUpdate,
-    db: Session = Depends(get_db),
+    db: DBAsyncSession,
 ) -> DealResponse:
-    deal_sqla = db.query(Deals).filter(Deals.id == deal_id).first()
+    result = await db.execute(
+        select(Deals)
+        .options(
+            selectinload(Deals.customer),
+            selectinload(Deals.contact),
+            selectinload(Deals.service),
+        )
+        .filter(Deals.id == deal_id),
+    )
+    deal_sqla = result.scalars().first()
     if not deal_sqla:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Deal not found")
 
-    updated_deal_dict = updated_deal_pyd.model_dump(mode="json", exclude_unset=True)
+    update_deal_dict = updated_deal_pyd.model_dump(mode="json", exclude_unset=True)
 
-    if "service_fk" in updated_deal_dict:
-        service = db.query(Services).filter(Services.id == updated_deal_dict["service_fk"]).first()
+    if "service_fk" in update_deal_dict:
+        service = await db.execute(
+            select(Services).filter(Services.id == update_deal_dict["service_fk"]),
+        )
+        service = service.scalars().first()
         if not service:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
 
-    if "customer_fk" in updated_deal_dict:
-        customer = (
-            db.query(Customers).filter(Customers.id == updated_deal_dict["customer_fk"]).first()
+    if "customer_fk" in update_deal_dict:
+        customer = await db.execute(
+            select(Customers).filter(Customers.id == update_deal_dict["customer_fk"]),
         )
+        customer = customer.scalars().first()
         if not customer:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
 
-        if "contact_fk" not in updated_deal_dict:
+        if "contact_fk" not in update_deal_dict:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Contact update required when change customer",
             )
 
-    if "contact_fk" in updated_deal_dict:
-        contact = db.query(Contacts).filter(Contacts.id == updated_deal_dict["contact_fk"]).first()
+    if "contact_fk" in update_deal_dict:
+        contact = await db.execute(
+            select(Contacts)
+            .options(selectinload(Contacts.customer))
+            .filter(Contacts.id == update_deal_dict["contact_fk"]),
+        )
+        contact = contact.scalars().first()
         if not contact:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
 
         if (
-            "customer_fk" in updated_deal_dict
+            "customer_fk" in update_deal_dict
             and contact.customer_fk != updated_deal_pyd.customer_fk
         ):
             raise HTTPException(
@@ -129,24 +178,24 @@ def update_deal(  # noqa: C901
                 detail="Customer does not have the specified contact",
             )
 
-        if "customer_fk" not in updated_deal_dict and contact.customer_fk != deal_sqla.customer_fk:
+        if "customer_fk" not in update_deal_dict and contact.customer_fk != deal_sqla.customer_fk:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Contact does not belong to the specified customer",
             )
 
-    for key, value in updated_deal_dict.items():
+    for key, value in update_deal_dict.items():
         setattr(deal_sqla, key, value)
 
-    db.commit()
-    db.refresh(deal_sqla)
+    await db.commit()
+    await db.refresh(deal_sqla)
     return deal_sqla
 
 
 @router.delete("/{deal_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_deal(deal_id: UUID, db: Session = Depends(get_db)) -> None:
-    deal = db.query(Deals).filter(Deals.id == deal_id).first()
+async def delete_deal(deal_id: UUID, db: DBAsyncSession) -> None:
+    deal = await db.get(Deals, deal_id)
     if not deal:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Deal not found")
-    db.delete(deal)
-    db.commit()
+    await db.delete(deal)
+    await db.commit()

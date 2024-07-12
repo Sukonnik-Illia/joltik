@@ -1,12 +1,12 @@
 from typing import List, Union
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from sqlalchemy import delete, select
+from sqlalchemy.orm import selectinload
 
-from joltik.db import get_db
-from joltik.errors import EntityDoesNotExistError
+from joltik.db import DBAsyncSession
 from joltik.models import Contacts, Customers, InteractionContacts, Interactions
 
 router = APIRouter()
@@ -58,23 +58,36 @@ class InteractionUpdate(BaseModel):
 
 
 @router.get("/", response_model=List[InteractionResponse])
-def list_interactions(db: Session = Depends(get_db)) -> List[InteractionResponse]:
-    return db.query(Interactions).all()
+async def list_all_interactions(db: DBAsyncSession) -> List[InteractionResponse]:
+    result = await db.execute(
+        select(Interactions).options(
+            selectinload(Interactions.customer),
+            selectinload(Interactions.contacts),
+        ),
+    )
+    return result.scalars().all()
+    # return [InteractionResponse.model_validate(interaction) for interaction in interactions]
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_interaction(
+async def create_interaction(
     interaction: InteractionCreate,
-    db: Session = Depends(get_db),
+    db: DBAsyncSession,
 ) -> InteractionResponse:
     # Ensure the customer exists
-    customer = db.query(Customers).filter(Customers.id == interaction.customer_fk).first()
+    customer = await db.execute(select(Customers).filter(Customers.id == interaction.customer_fk))
+    customer = customer.scalars().first()
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
 
     # Ensure the contacts exist and belong to the same customer
     contact_ids = [contact.id for contact in interaction.contacts]
-    existing_contacts = db.query(Contacts).filter(Contacts.id.in_(contact_ids)).all()
+    existing_contacts = await db.execute(
+        select(Contacts)
+        .options(selectinload(Contacts.customer))
+        .filter(Contacts.id.in_(contact_ids)),
+    )
+    existing_contacts = existing_contacts.scalars().all()
     if len(existing_contacts) != len(contact_ids):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -87,10 +100,10 @@ def create_interaction(
                 detail="One or more contacts do not belong to the specified customer",
             )
 
-    new_interaction_dict = interaction.model_dump(exclude={"contacts"})
+    new_interaction_dict = interaction.model_dump(mode="json", exclude={"contacts"})
     new_interaction_sqla = Interactions(**new_interaction_dict)
     db.add(new_interaction_sqla)
-    db.commit()
+    await db.commit()
 
     for contact_id in contact_ids:
         interaction_contacts_sqla = InteractionContacts(
@@ -98,49 +111,67 @@ def create_interaction(
             contacts_fk=contact_id,
         )
         db.add(interaction_contacts_sqla)
-    db.flush()
-    db.commit()
+    await db.commit()
+    await new_interaction_sqla.awaitable_attrs.contacts
 
     return new_interaction_sqla
     # return InteractionResponse.from_interaction(new_interaction)
 
 
 @router.get("/{interaction_id}")
-def get_one_interaction(interaction_id: UUID, db: Session = Depends(get_db)) -> InteractionResponse:
-    interaction = db.query(Interactions).filter(Interactions.id == interaction_id).first()
+async def select_interaction(interaction_id: UUID, db: DBAsyncSession) -> InteractionResponse:
+    result = await db.execute(
+        select(Interactions)
+        .options(selectinload(Interactions.customer), selectinload(Interactions.contacts))
+        .filter(Interactions.id == interaction_id),
+    )
+    interaction = result.scalars().first()
     if not interaction:
-        raise EntityDoesNotExistError
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Interaction not found",
+        )
     return interaction
 
 
 @router.put("/{interaction_id}")
-def update_interaction(  # noqa: C901, PLR0912
+async def update_interaction(  # noqa: C901, PLR0912
     interaction_id: UUID,
     updated_interaction_pyd: InteractionUpdate,
-    db: Session = Depends(get_db),
+    db: DBAsyncSession,
 ) -> InteractionResponse:
-    interaction = db.query(Interactions).filter(Interactions.id == interaction_id).first()
+    result = await db.execute(
+        select(Interactions)
+        .options(selectinload(Interactions.customer), selectinload(Interactions.contacts))
+        .filter(Interactions.id == interaction_id),
+    )
+    interaction = result.scalars().first()
     if not interaction:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Interaction not found")
-        # raise custom exception
 
-    updated_inter_dict = updated_interaction_pyd.model_dump(exclude_unset=True)
+    updated_inter_dict = updated_interaction_pyd.model_dump(mode="json", exclude_unset=True)
 
     # Update the customer first
     if "customer_fk" in updated_inter_dict:
-        customer = (
-            db.query(Customers).filter(Customers.id == updated_inter_dict["customer_fk"]).first()
+        customer = await db.execute(
+            select(Customers).filter(Customers.id == updated_inter_dict["customer_fk"]),
         )
+        customer = customer.scalars().first()
         if not customer:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
         interaction.customer_fk = updated_inter_dict["customer_fk"]
 
-        db.commit()
-        db.refresh(interaction)
+        await db.commit()
+        await db.refresh(interaction)
 
         # For new customer - validate and update contacts
         contact_ids = [contact.id for contact in updated_interaction_pyd.contacts]
-        existing_contacts = db.query(Contacts).filter(Contacts.id.in_(contact_ids)).all()
+        existing_contacts = await db.execute(
+            select(Contacts)
+            .options(selectinload(Contacts.customer))
+            .filter(Contacts.id.in_(contact_ids)),
+        )
+        existing_contacts = existing_contacts.scalars().all()
         if len(existing_contacts) != len(contact_ids):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -154,9 +185,11 @@ def update_interaction(  # noqa: C901, PLR0912
                     detail="One or more contacts do not belong to the specified customer",
                 )
 
-        db.query(InteractionContacts).filter(
-            InteractionContacts.interactions_fk == interaction_id,
-        ).delete()
+        await db.execute(
+            delete(InteractionContacts).where(
+                InteractionContacts.interactions_fk == interaction_id,
+            ),
+        )
         for contact_id in contact_ids:
             interaction_contact = InteractionContacts(
                 interactions_fk=interaction.id,
@@ -168,7 +201,12 @@ def update_interaction(  # noqa: C901, PLR0912
     # Validate and update contacts when customer hasn't changed
     if "customer_fk" not in updated_inter_dict and "contacts" in updated_inter_dict:
         contact_ids = [contact.id for contact in updated_interaction_pyd.contacts]
-        existing_contacts = db.query(Contacts).filter(Contacts.id.in_(contact_ids)).all()
+        existing_contacts = await db.execute(
+            select(Contacts)
+            .options(selectinload(Contacts.customer))
+            .filter(Contacts.id.in_(contact_ids)),
+        )
+        existing_contacts = existing_contacts.scalars().all()
         if len(existing_contacts) != len(contact_ids):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -182,9 +220,11 @@ def update_interaction(  # noqa: C901, PLR0912
                     detail="One or more contacts do not belong to the specified customer",
                 )
 
-        db.query(InteractionContacts).filter(
-            InteractionContacts.interactions_fk == interaction_id,
-        ).delete()
+        await db.execute(
+            delete(InteractionContacts).where(
+                InteractionContacts.interactions_fk == interaction_id,
+            ),
+        )
         for contact_id in contact_ids:
             interaction_contact = InteractionContacts(
                 interactions_fk=interaction.id,
@@ -197,19 +237,21 @@ def update_interaction(  # noqa: C901, PLR0912
     for key, value in updated_inter_dict.items():
         setattr(interaction, key, value)
 
-    db.commit()
-    db.refresh(interaction)
+    await db.commit()
+    await db.refresh(interaction)
 
     return interaction
 
 
 @router.delete("/{interaction_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_interaction(interaction_id: UUID, db: Session = Depends(get_db)) -> None:
-    interaction = db.query(Interactions).filter(Interactions.id == interaction_id).first()
+async def delete_interaction(interaction_id: UUID, db: DBAsyncSession) -> None:
+    interaction = await db.get(Interactions, interaction_id)
     if interaction is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    db.query(InteractionContacts).filter(
-        InteractionContacts.interactions_fk == interaction_id,
-    ).delete()
-    db.delete(interaction)
-    db.commit()
+    await db.execute(
+        delete(InteractionContacts).where(
+            InteractionContacts.interactions_fk == interaction_id,
+        ),
+    )
+    await db.delete(interaction)
+    await db.commit()

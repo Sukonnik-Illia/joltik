@@ -16,6 +16,7 @@ class Config(BaseSettings):
 
     google_client_id: str
     developer_token: str
+    secret: str
 
     @property
     def postgres_url(self) -> PostgresDsn:

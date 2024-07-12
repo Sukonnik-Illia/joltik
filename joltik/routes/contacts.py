@@ -1,10 +1,11 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
-from joltik.db import get_db
+from joltik.db import DBAsyncSession
 from joltik.models import Contacts, Customers
 
 router = APIRouter()
@@ -48,59 +49,81 @@ class ContactUpdate(BaseModel):
 
 
 @router.get("/")
-def list_contacts(db: Session = Depends(get_db)) -> list[ContactResponse]:
-    return db.query(Contacts).all()
+async def list_all_contacts(db: DBAsyncSession) -> list[ContactResponse]:
+    result = await db.execute(select(Contacts).options(selectinload(Contacts.customer)))
+    return result.scalars().all()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_contact(contact: ContactCreate, db: Session = Depends(get_db)) -> ContactResponse:
-    customer = db.query(Customers).filter(Customers.id == contact.customer.id).first()
+async def create_contact(contact: ContactCreate, db: DBAsyncSession) -> ContactResponse:
+    result = await db.execute(select(Customers).filter(Customers.id == contact.customer.id))
+    customer = result.scalars().first()
     if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
-    new_contact_dict = contact.model_dump(exclude={"customer"})
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Wrong customer id")
+    new_contact_dict = contact.model_dump(mode="json", exclude={"customer"})
     new_contact_sqla = Contacts(**new_contact_dict, customer_fk=contact.customer.id)
     db.add(new_contact_sqla)
-    db.commit()
-    return new_contact_sqla
+    await db.commit()
+    await db.refresh(new_contact_sqla)
+    await new_contact_sqla.awaitable_attrs.customer
+    return ContactResponse.model_validate(new_contact_sqla)
+
+
+# {
+#   "first_name": "Vasya",
+#   "last_name": "Pupkin",
+#   "job_title": "no-doer",
+#   "email": "vasyapupkin@butonchik.com",
+#   "phone_number": "+8032",
+#   "comment": "no-comment",
+#   "customer": {"id": "7696bc4f-8165-4548-a1a9-6eeb124f4bf9"},
+# }
 
 
 @router.get("/{contact_id}")
-def list_one_contact(contact_id: UUID, db: Session = Depends(get_db)) -> ContactResponse:
-    contact = db.query(Contacts).filter(Contacts.id == contact_id).first()
+async def select_contact(contact_id: UUID, db: DBAsyncSession) -> ContactResponse:
+    result = await db.execute(
+        select(Contacts).options(selectinload(Contacts.customer)).filter(Contacts.id == contact_id),
+    )
+    contact = result.scalars().first()
     if contact is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return contact
 
 
 @router.put("/{contact_id}", status_code=status.HTTP_202_ACCEPTED)
-def update_contact(
+async def update_contact(
     contact_id: UUID,
     updated_contact: ContactUpdate,
-    db: Session = Depends(get_db),
+    db: DBAsyncSession,
 ) -> ContactResponse:
-    contact = db.query(Contacts).filter(Contacts.id == contact_id).first()
-    if not contact:
+    result = await db.execute(
+        select(Contacts).options(selectinload(Contacts.customer)).filter(Contacts.id == contact_id),
+    )
+    contact_sqla = result.scalars().first()
+    if not contact_sqla:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
-    update_data = updated_contact.model_dump(exclude_unset=True)
 
-    if "customer" in update_data:
-        customer = db.query(Customers).filter(Customers.id == update_data["customer"]["id"]).first()
+    update_data_dict = updated_contact.model_dump(mode="json", exclude_unset=True)
+
+    if "customer" in update_data_dict:
+        customer = await db.get(Customers, update_data_dict["customer"]["id"])
         if not customer:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
-        contact.customer_fk = update_data["customer"]["id"]
-        del update_data["customer"]
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Wrong customer id")
+        contact_sqla.customer_fk = update_data_dict["customer"]["id"]
+        del update_data_dict["customer"]
 
-    for key, value in update_data.items():
-        setattr(contact, key, value)
-    db.commit()
-    db.refresh(contact)
-    return contact
+    for key, value in update_data_dict.items():
+        setattr(contact_sqla, key, value)
+    await db.commit()
+    await db.refresh(contact_sqla)
+    return contact_sqla
 
 
 @router.delete("/{contact_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_contact(contact_id: UUID, db: Session = Depends(get_db)) -> None:
-    contact = db.query(Contacts).filter(Contacts.id == contact_id).first()
+async def delete_contact(contact_id: UUID, db: DBAsyncSession) -> None:
+    contact = await db.get(Contacts, contact_id)
     if contact is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    db.delete(contact)
-    db.commit()
+    await db.delete(contact)
+    await db.commit()
