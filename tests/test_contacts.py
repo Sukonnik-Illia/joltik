@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from fastapi import status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from joltik.models import Contacts
 from joltik.models.tables_faker_data import generate_contact, generate_customer
@@ -12,7 +13,7 @@ def contact_to_pydantic(contact: Contacts) -> ContactCreate:
     return ContactCreate.model_validate(contact)
 
 
-def test_contacts_CRUD(client) -> None:  # noqa: N802, ANN001
+def test_contacts_CRUD(client, db_session: AsyncSession) -> None:  # noqa: N802, ANN001, ARG001
     resp = client.get("/contact")
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == []

@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from fastapi import status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from joltik.models import Interactions
 from joltik.models.tables_faker_data import (
@@ -17,7 +18,7 @@ def interaction_to_pydantic(interaction: Interactions) -> InteractionCreate:
     return InteractionCreate.model_validate(interaction)
 
 
-def test_interactions_CRUD(client) -> None:  # noqa: N802, ANN001
+def test_interactions_CRUD(client, db_session: AsyncSession) -> None:  # noqa: N802, ANN001, ARG001
     resp = client.get("/interaction")
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == []

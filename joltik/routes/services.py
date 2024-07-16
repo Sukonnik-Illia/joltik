@@ -1,15 +1,13 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy import select
 
-from joltik.auth.user_manager import current_active_user
 from joltik.db import DBAsyncSession
 from joltik.models import Services
 from joltik.models.services import Service as ServiceType
-from joltik.models.users import User
 
 router = APIRouter()
 
@@ -29,7 +27,7 @@ class ServiceResponse(ServiceCreate):
 @router.get("/")
 async def list_all_services(
     db: DBAsyncSession,
-    _: User = Depends(current_active_user),
+    # _: User = Depends(current_active_user),
 ) -> list[ServiceResponse]:
     result = await db.execute(select(Services))
     return result.scalars().all()
