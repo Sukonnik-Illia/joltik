@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 
 from joltik.db import DBAsyncSession
@@ -13,15 +13,14 @@ router = APIRouter()
 
 
 class CustomerCreate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     company_name: str
     industry: str
     address: str
     email: str
     phone_number: str
     lead_status: LeadStatus
-
-    class Config:
-        from_attributes = True
 
 
 class CustomerResponse(CustomerCreate):

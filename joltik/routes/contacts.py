@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
@@ -12,13 +12,13 @@ router = APIRouter()
 
 
 class Customer(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
     id: UUID
-
-    class Config:
-        from_attributes = True
 
 
 class ContactCreate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     first_name: str
     last_name: str
     job_title: str
@@ -27,15 +27,14 @@ class ContactCreate(BaseModel):
     comment: str
     customer: Customer
 
-    class Config:
-        from_attributes = True
-
 
 class ContactResponse(ContactCreate):
     id: UUID
 
 
 class ContactUpdate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     first_name: str | None = None
     last_name: str | None = None
     job_title: str | None = None
@@ -43,9 +42,6 @@ class ContactUpdate(BaseModel):
     phone_number: str | None = None
     comment: str | None = None
     customer: Customer | None = None
-
-    class Config:
-        from_attributes = True
 
 
 @router.get("/")

@@ -2,7 +2,7 @@ from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
@@ -15,6 +15,8 @@ router = APIRouter()
 
 
 class DealCreate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     deal_name: str
     deal_type: Deal_type
     stage: Deal_stage
@@ -24,11 +26,10 @@ class DealCreate(BaseModel):
     service_fk: UUID
     customer_fk: UUID
 
-    class Config:
-        from_attributes = True
-
 
 class DealUpdate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     deal_name: str | None = None
     deal_type: Deal_type | None = None
     stage: Deal_stage | None = None
@@ -38,15 +39,11 @@ class DealUpdate(BaseModel):
     service_fk: UUID | None = None
     customer_fk: UUID | None = None
 
-    class Config:
-        from_attributes = True
-
 
 class DealResponse(DealCreate):
-    id: UUID
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    id: UUID
 
 
 @router.get("/")

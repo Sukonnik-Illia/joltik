@@ -2,7 +2,7 @@ from typing import List, Union
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import delete, select
 from sqlalchemy.orm import selectinload
 
@@ -13,21 +13,19 @@ router = APIRouter()
 
 
 class Contact(BaseModel):
-    id: UUID
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    id: UUID
 
 
 class InteractionCreate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     date: int
     type: str
     description: str
     customer_fk: UUID
     contacts: List[Contact]
-
-    class Config:
-        from_attributes = True
 
 
 class InteractionResponse(InteractionCreate):
@@ -35,14 +33,13 @@ class InteractionResponse(InteractionCreate):
 
 
 class InteractionUpdate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     date: Union[int, None] = None
     type: Union[str, None] = None
     description: Union[str, None] = None
     customer_fk: Union[UUID, None] = None
     contacts: Union[List[Contact], None] = None
-
-    class Config:
-        from_attributes = True
 
 
 # def from_interaction(interaction: Interactions, db: Session) -> InteractionResponse:

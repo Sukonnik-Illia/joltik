@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 
 from joltik.db import DBAsyncSession
@@ -13,11 +13,10 @@ router = APIRouter()
 
 
 class ServiceCreate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     service_type: ServiceType
     description: str
-
-    class Config:
-        from_attributes = True
 
 
 class ServiceResponse(ServiceCreate):

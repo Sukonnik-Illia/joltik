@@ -4,11 +4,9 @@ from joltik.config import config
 
 cookie_transport = CookieTransport(cookie_name="crm", cookie_max_age=28800)
 
-SECRET = config.secret
-
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=SECRET, lifetime_seconds=3600)
+    return JWTStrategy(secret=config.secret, lifetime_seconds=3600)
 
 
 auth_backend = AuthenticationBackend(
