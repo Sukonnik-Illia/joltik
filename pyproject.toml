@@ -39,29 +39,32 @@ line-length = 100
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN101", # Missing type annotation for `self` in method
-    "COM819", # prohibited-trailing-comma
-    "D100",   # Missing docstring in public module
-    "D101",   # Missing docstring in public class
-    "D102",   # Missing docstring in public method
-    "D103",   # Missing docstring in public function
-    "D104",   # Missing docstring in public package
-    "D106",   # Missing docstring in public nested class
-    "D107",   # Missing docstring in `__init__`
-    "D211",   # one-blank-line-before-class
-    "D212",   # multi-line-summary-second-line
-    "D400",   # First line should end with a period
-    "D401",   # First line should be in imperative mood
-    "D415",   # First line should end with a period
-    "ERA001", # Found commented-out code
-    "FA100",  # Add `from __future__ import annotations` to simplify `typing.Union`
-    "FA102",  # Add `from __future__ import annotations`
-    "ISC001", # Implicitly concatenated string literals on one line
-    "PTH123", # `open()` should be replaced by `Path.open()`
+    "ANN101",  # Missing type annotation for `self` in method
+    "C901",    # `update_deal` is too complex (12 > 10)
+    "COM819",  # prohibited-trailing-comma
+    "D100",    # Missing docstring in public module
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+    "D104",    # Missing docstring in public package
+    "D106",    # Missing docstring in public nested class
+    "D107",    # Missing docstring in `__init__`
+    "D211",    # one-blank-line-before-class
+    "D212",    # multi-line-summary-second-line
+    "D400",    # First line should end with a period
+    "D401",    # First line should be in imperative mood
+    "D415",    # First line should end with a period
+    "ERA001",  # Found commented-out code
+    "FA100",   # Add `from __future__ import annotations` to simplify `typing.Union`
+    "FA102",   # Add `from __future__ import annotations`
+    "ISC001",  # Implicitly concatenated string literals on one line
+    "PLR0912", # Too many branches (13 > 12)
+    "PTH123",  # `open()` should be replaced by `Path.open()`
 ]
 
 [tool.ruff.format]
 line-ending = "lf"
+
 
 [tool.ruff.lint.per-file-ignores]
 # Ignore F401,F403 (import violations) in all __init__.py files.

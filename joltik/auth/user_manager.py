@@ -9,12 +9,10 @@ from joltik.auth.auth import auth_backend
 from joltik.auth.users import User, get_user_db
 from joltik.config import config
 
-SECRET = config.secret
-
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
+    reset_password_token_secret = config.secret
+    verification_token_secret = config.secret
 
     async def on_after_register(self, user: User, _: Optional[Request] = None) -> None:
         print(f"User {user.id} has registered.")  # noqa: T201

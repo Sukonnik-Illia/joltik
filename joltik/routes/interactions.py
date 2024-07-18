@@ -132,7 +132,7 @@ async def select_interaction(interaction_id: UUID, db: DBAsyncSession) -> Intera
 
 
 @router.put("/{interaction_id}")
-async def update_interaction(  # noqa: C901, PLR0912
+async def update_interaction(
     interaction_id: UUID,
     updated_interaction_pyd: InteractionUpdate,
     db: DBAsyncSession,

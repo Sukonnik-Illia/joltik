@@ -114,7 +114,7 @@ async def select_deal(deal_id: UUID, db: DBAsyncSession) -> DealResponse:
 
 
 @router.put("/{deal_id}")
-async def update_deal(  # noqa: C901
+async def update_deal(
     deal_id: UUID,
     updated_deal_pyd: DealUpdate,
     db: DBAsyncSession,
