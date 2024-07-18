@@ -18,8 +18,7 @@ psycopg = "^3.1.19"
 git-filter-repo = "^2.38.0"
 fastapi = "^0.111.0"
 pytest = "^8.2.2"
-fastapi-users = {extras = ["sqlalchemy"], version = "^13.0.0"}
-pytest-asyncio = "^0.23.7"
+fastapi-users = { extras = ["sqlalchemy"], version = "^13.0.0" }
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.3"
@@ -70,6 +69,7 @@ line-ending = "lf"
 "tests/*" = [
     "S101",
     "PLR0915", # Too many statements
+    "N802",    # Function name `test_services_CRUD` should be lowercase
 ]
 
 

@@ -1,8 +1,7 @@
 from uuid import uuid4
 
-import pytest
 from fastapi import status
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.testclient import TestClient
 
 service_example = {
     "service_type": "SEO",
@@ -10,10 +9,7 @@ service_example = {
 }
 
 
-# https://fastapi.tiangolo.com/advanced/async-tests/
-# @pytest.mark.anyio
-@pytest.mark.asyncio()
-async def test_services_CRUD(client, db_session: AsyncSession) -> None:  # noqa: N802, ANN001, ARG001
+def test_services_CRUD(client: TestClient) -> None:
     resp = client.get("/service")
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == []

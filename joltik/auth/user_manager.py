@@ -3,6 +3,7 @@ from typing import AsyncGenerator, Optional
 
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
+from fastapi_users.db import SQLAlchemyUserDatabase
 
 from joltik.auth.auth import auth_backend
 from joltik.auth.users import User, get_user_db
@@ -15,21 +16,13 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
-    async def on_after_register(self, user: User, request: Optional[Request] = None) -> None:  # noqa: ARG002
+    async def on_after_register(self, user: User, _: Optional[Request] = None) -> None:
         print(f"User {user.id} has registered.")  # noqa: T201
 
-    # async def on_after_forgot_password(
-    #     self, user: User, token: str, request: Optional[Request] = None,
-    # ) -> None:
-    #     print(f"User {user.id} has forgot their password. Reset token: {token}")
 
-    # async def on_after_request_verify(
-    #     self, user: User, token: str, request: Optional[Request] = None,
-    # ) -> None:
-    #     print(f"Verification requested for user {user.id}. Verification token: {token}")
-
-
-async def get_user_manager(user_db=Depends(get_user_db)) -> AsyncGenerator:  # noqa: ANN001
+async def get_user_manager(
+    user_db: SQLAlchemyUserDatabase = Depends(get_user_db),
+) -> AsyncGenerator[UserManager, None]:
     yield UserManager(user_db)
 
 

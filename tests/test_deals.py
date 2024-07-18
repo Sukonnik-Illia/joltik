@@ -1,5 +1,5 @@
 from fastapi import status
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.testclient import TestClient
 
 from joltik.models import Services
 from joltik.models.tables_faker_data import generate_contact, generate_customer, generate_deal
@@ -9,7 +9,7 @@ from tests.test_contacts import contact_to_pydantic
 from tests.test_customers import customer_to_pydantic
 
 
-def test_deals_CRUD(client, db_session: AsyncSession) -> None:  # noqa: N802, ANN001, ARG001
+def test_deals_CRUD(client: TestClient) -> None:
     resp = client.get("/deal")
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == []

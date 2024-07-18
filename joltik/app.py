@@ -39,7 +39,7 @@ async def authenticated_route(user: User = Depends(current_active_user)) -> dict
 
 
 @app.exception_handler(ValidationError)
-def validation_exception_handler(request: Request, exc: ValidationError) -> JSONResponse:  # noqa: ARG001
+def validation_exception_handler(_: Request, exc: ValidationError) -> JSONResponse:
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content=jsonable_encoder({"detail": exc.errors()}),
