@@ -7,6 +7,7 @@ class Config(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
     )
+
     environment: str = "dev"
     postgres_user: str
     postgres_password: str

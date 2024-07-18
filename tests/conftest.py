@@ -6,26 +6,17 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from fastapi.testclient import TestClient
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy_utils.functions import create_database, database_exists, drop_database
 
 from joltik.app import app as actual_app
 from joltik.config import config
-from joltik.db import get_async_session
+from joltik.db import AsyncSessionLocal, get_async_session
 
 # @pytest.fixture(scope="session")
 # def conf():
 #     config.postgres_db = "testdb"
 #     return config
-
-async_engine = create_async_engine(config.postgres_url, echo=True)
-
-AsyncSessionLocal = async_sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=async_engine,
-    expire_on_commit=False,
-)
 
 
 @pytest.fixture(scope="session", autouse=True)
