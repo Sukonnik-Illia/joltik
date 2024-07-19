@@ -1,12 +1,13 @@
-from pydantic import PostgresDsn
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import ConfigDict, PostgresDsn
+from pydantic_settings import BaseSettings
 
 
 class Config(BaseSettings):
-    model_config = SettingsConfigDict(
+    model_config = ConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
     )
+
     environment: str = "dev"
     postgres_user: str
     postgres_password: str
@@ -15,7 +16,11 @@ class Config(BaseSettings):
     postgres_port: int = 5432
 
     google_client_id: str
-    developer_token: str
+    google_developer_token: str
+    google_client_secret: str
+    google_login_customer_id: str
+
+    secret: str
 
     @property
     def postgres_url(self) -> PostgresDsn:
