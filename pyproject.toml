@@ -34,6 +34,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 100
+extend-exclude = ["docs/*"]
 
 [tool.ruff.lint]
 select = ["ALL"]
