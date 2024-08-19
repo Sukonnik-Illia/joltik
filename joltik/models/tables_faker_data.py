@@ -6,7 +6,7 @@ from faker import Faker
 
 from joltik.helpers import SERVICE
 from joltik.models.contacts import Contacts
-from joltik.models.customers import Customer
+from joltik.models.customers import Customers
 from joltik.models.deals import Deals
 from joltik.models.interactions import InteractionContacts, Interactions
 from joltik.models.services import Services
@@ -15,12 +15,12 @@ fake = Faker()
 # Faker.seed(1234)
 
 
-def generate_customer() -> Customer:
+def generate_customer() -> Customers:
     company_name = fake.company()
     email_username = re.sub(r"\W+", "", company_name).lower()
     email = f"{email_username}@{email_username}.com"
 
-    return Customer(
+    return Customers(
         id=uuid.uuid4(),
         company_name=company_name,
         industry=fake.bs(),
@@ -33,7 +33,7 @@ def generate_customer() -> Customer:
     )
 
 
-def generate_contact(customer: Union[Customer, None] = None) -> Contacts:
+def generate_contact(customer: Union[Customers, None] = None) -> Contacts:
     if customer is None:
         customer = generate_customer()
 
@@ -56,7 +56,7 @@ def generate_contact(customer: Union[Customer, None] = None) -> Contacts:
 
 
 def generate_interaction(
-    customer: Union[Customer, None] = None,
+    customer: Union[Customers, None] = None,
     contacts: Union[Contacts, list[Contacts], None] = None,
     num_interactions: int = 1,
 ) -> tuple[Union[list[Interactions], list[InteractionContacts]]]:
@@ -106,7 +106,7 @@ def import_services() -> list[Services]:
 
 def generate_deal(
     service: Union[Services, None] = None,
-    customer: Union[Customer, None] = None,
+    customer: Union[Customers, None] = None,
     contact: Union[Contacts, None] = None,
 ) -> Deals:
     if service is None:

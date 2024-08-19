@@ -60,8 +60,18 @@ def update_service(
     service = db.query(Services).filter(Services.id == service_id).first()
     if service is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    service.service_type = service_update.service_type  # ENUM, check for Unprocessable Entity?
-    service.description = service_update.description
+    update_data = service_update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(service, key, value)
     db.commit()
     db.refresh(service)
     return service
+
+
+@router.delete("/{service_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_service(service_id: UUID, db: Session = Depends(get_db)) -> None:
+    service = db.query(Services).filter(Services.id == service_id).first()
+    if service is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    db.delete(service)
+    db.commit()
