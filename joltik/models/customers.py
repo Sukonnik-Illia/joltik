@@ -25,17 +25,17 @@ def load_status_list(json_file: str) -> list[str]:
 # lead_status_values = load_status_list("./joltik/models/lead_statuses.json")
 # LeadStatusEnum = create_dynamic_enum("LeadStatusEnum", lead_status_values)
 
-LeadStatusEnum = Literal["New", "Connected", "Proposal", "Client", "Lost"]
+LeadStatus = Literal["New", "Connected", "Proposal", "Client", "Lost"]
 
 
-class Customer(CrmBase):
+class Customers(CrmBase):
     __tablename__ = "customers"
     company_name: Mapped[str] = mapped_column(nullable=False)
     industry: Mapped[str] = mapped_column(nullable=False)
     address: Mapped[str] = mapped_column(nullable=False)
     email: Mapped[str] = mapped_column(nullable=False)
     phone_number: Mapped[str] = mapped_column(nullable=False)
-    lead_status: Mapped[LeadStatusEnum]
+    lead_status: Mapped[LeadStatus]
     # = mapped_column(
     #     SQLAlchemyEnum(LeadStatusEnum),
     #     default=LeadStatusEnum.NEW,

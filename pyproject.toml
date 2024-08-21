@@ -47,6 +47,7 @@ ignore = [
     "D103",   # Missing docstring in public function
     "D104",   # Missing docstring in public package
     "D106",   # Missing docstring in public nested class
+    "D107",   # Missing docstring in `__init__`
     "D211",   # one-blank-line-before-class
     "D212",   # multi-line-summary-second-line
     "D400",   # First line should end with a period
@@ -55,6 +56,7 @@ ignore = [
     "ERA001", # Found commented-out code
     "FA100",  # Add `from __future__ import annotations` to simplify `typing.Union`
     "FA102",  # Add `from __future__ import annotations`
+    "ISC001", # Implicitly concatenated string literals on one line
     "PTH123", # `open()` should be replaced by `Path.open()`
 ]
 
@@ -64,7 +66,10 @@ line-ending = "lf"
 [tool.ruff.lint.per-file-ignores]
 # Ignore F401,F403 (import violations) in all __init__.py files.
 "__init__.py" = ["F403", "F401"]
-"tests/*" = ["S101"]
+"tests/*" = [
+    "S101",
+    "PLR0915", # Too many statements
+]
 
 
 [tool.pytest_env]
