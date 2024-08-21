@@ -1,0 +1,3 @@
+- vacation 22 working days
+- laptop
+- technical interview, task
