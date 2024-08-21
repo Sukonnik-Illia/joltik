@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from fastapi import status
+from fastapi.testclient import TestClient
 
 from joltik.models import Customers
 from joltik.models.tables_faker_data import generate_customer
@@ -16,7 +17,7 @@ customer_example = customer_to_pydantic(customer_example).model_dump(mode="json"
 del customer_example["id"]
 
 
-def test_customers_CRUD(client) -> None:  # noqa: N802, ANN001
+def test_customers_CRUD(client: TestClient) -> None:
     resp = client.get("/customer")
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == []

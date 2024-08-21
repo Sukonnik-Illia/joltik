@@ -1,11 +1,11 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
+from pydantic import BaseModel, ConfigDict
+from sqlalchemy import select
 
-from joltik.db import get_db
+from joltik.db import DBAsyncSession
 from joltik.models import Services
 from joltik.models.services import Service as ServiceType
 
@@ -13,11 +13,10 @@ router = APIRouter()
 
 
 class ServiceCreate(BaseModel):
+    model_config: ConfigDict = ConfigDict(from_attributes=True)
+
     service_type: ServiceType
     description: str
-
-    class Config:
-        from_attributes = True
 
 
 class ServiceResponse(ServiceCreate):
@@ -25,53 +24,52 @@ class ServiceResponse(ServiceCreate):
 
 
 @router.get("/")
-def list_all(db: Session = Depends(get_db)) -> list[ServiceResponse]:
-    return db.query(Services).all()
-    # resp=[]
-    # for service in db.query(Services).all():
-    #     resp.append(
-    #         ServiceResponce(service_type = service.service_type, description=service.description)
-    #     )
-    # return resp
+async def list_all_services(
+    db: DBAsyncSession,
+    # _: User = Depends(current_active_user),
+) -> list[ServiceResponse]:
+    result = await db.execute(select(Services))
+    return result.scalars().all()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_service(req_service: ServiceCreate, db: Session = Depends(get_db)) -> ServiceResponse:
-    service = Services(**jsonable_encoder(req_service))
-    db.add(service)
-    db.commit()
-    return service
+async def create_service(service_pyd: ServiceCreate, db: DBAsyncSession) -> ServiceResponse:
+    new_service_sqla = Services(**jsonable_encoder(service_pyd))
+    db.add(new_service_sqla)
+    await db.commit()
+    await db.refresh(new_service_sqla)
+    return new_service_sqla
 
 
 @router.get("/{service_id}", response_model=ServiceResponse)
-def list_one(service_id: UUID, db: Session = Depends(get_db)) -> ServiceResponse:
-    service = db.query(Services).filter(Services.id == service_id).first()
+async def select_service(service_id: UUID, db: DBAsyncSession) -> ServiceResponse:
+    service = await db.get(Services, service_id)
     if service is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return service
 
 
 @router.put("/{service_id}", status_code=status.HTTP_202_ACCEPTED)
-def update_service(
+async def update_service(
     service_id: UUID,
-    service_update: ServiceCreate,
-    db: Session = Depends(get_db),
+    updated_service_pyd: ServiceCreate,
+    db: DBAsyncSession,
 ) -> ServiceResponse:
-    service = db.query(Services).filter(Services.id == service_id).first()
-    if service is None:
+    service_sqla = await db.get(Services, service_id)
+    if not service_sqla:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    update_data = service_update.model_dump(exclude_unset=True)
-    for key, value in update_data.items():
-        setattr(service, key, value)
-    db.commit()
-    db.refresh(service)
-    return service
+    update_service_dict = updated_service_pyd.model_dump(exclude_unset=True)
+    for key, value in update_service_dict.items():
+        setattr(service_sqla, key, value)
+    await db.commit()
+    await db.refresh(service_sqla)
+    return service_sqla
 
 
 @router.delete("/{service_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_service(service_id: UUID, db: Session = Depends(get_db)) -> None:
-    service = db.query(Services).filter(Services.id == service_id).first()
-    if service is None:
+async def delete_service(service_id: UUID, db: DBAsyncSession) -> None:
+    service_sqla = await db.get(Services, service_id)
+    if service_sqla is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    db.delete(service)
-    db.commit()
+    await db.delete(service_sqla)
+    await db.commit()

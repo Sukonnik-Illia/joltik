@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from fastapi import status
+from fastapi.testclient import TestClient
 
 service_example = {
     "service_type": "SEO",
@@ -8,7 +9,7 @@ service_example = {
 }
 
 
-def test_services_CRUD(client) -> None:  # noqa: N802, ANN001
+def test_services_CRUD(client: TestClient) -> None:
     resp = client.get("/service")
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == []
