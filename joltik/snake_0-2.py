@@ -13,7 +13,7 @@ class Field:
         self.start_position = [self.max_y // 2, self.max_x // 2]
 
 
-class Apple(Field):
+class Apple:
     def __init__(self, field: Field):
         self.apples = "@"
 
@@ -26,7 +26,7 @@ class Apple(Field):
         return self.apple
 
 
-class Snake(Field):
+class Snake:
     def __init__(self, field: Field, start_len=5):
         self.direction = 0
         self.head = field.start_position[:]  # start position from class Field
@@ -92,7 +92,7 @@ class Snake(Field):
                 return self.quit
 
 
-class Game(Snake):
+class Game:
     def __init__(self, screen: window):
         self.screen = screen
         self.speed = 0.3

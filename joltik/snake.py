@@ -76,8 +76,8 @@ def main(screen: window) -> None:
     body = [head[:]] * startlength
     blank_cell = body[-1][:]
     while not gameover:
-        if blank_cell not in body:
-            screen.addch(blank_cell[0], blank_cell[1], " ")
+        # if blank_cell not in body:
+        #     screen.addch(blank_cell[0], blank_cell[1], " ")
 
         headchar = heads[direction]
         screen.addch(head[0], head[1], headchar)

@@ -1,6 +1,5 @@
 ## Is python OOP ##
 ### Variation: What is OOP + discuss on its principles ###
-
 Pure OOP languages: Ruby, Scala, JADE, Emerald.
 Python is designed primarily for OOP, though not pure OOP.
 
