@@ -1,4 +1,9 @@
-Valeria Batison
+# Interactions
+## linkedin
+Yanina Serdiuk
+https://www.linkedin.com/in/yanina-serdiuk-316a5b225/
+## email from Belen Juarez
+## call with Valeria Batison
 
 american farmacurical services
 https://edetek.com/
