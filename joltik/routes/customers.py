@@ -42,16 +42,6 @@ async def create_customer(customer_pyd: CustomerCreate, db: DBAsyncSession) -> C
     return new_customer_sqla
 
 
-# {
-#   "company_name": "Butonchik",
-#   "industry": "insulation",
-#   "address": "Farfaraway str",
-#   "email": "figulka@butonchik.com",
-#   "phone_number": "000",
-#   "lead_status": "Proposal"
-# }
-
-
 @router.get("/{customer_id}", response_model=CustomerResponse)
 async def select_customer(customer_id: UUID, db: DBAsyncSession) -> CustomerResponse:
     customer = await db.get(Customers, customer_id)
@@ -84,3 +74,13 @@ async def delete_customer(customer_id: UUID, db: DBAsyncSession) -> None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     await db.delete(customer_sqla)
     await db.commit()
+
+
+# {
+#   "company_name": "Butonchik",
+#   "industry": "insulation",
+#   "address": "Farfaraway str",
+#   "email": "figulka@butonchik.com",
+#   "phone_number": "000",
+#   "lead_status": "Proposal"
+# }

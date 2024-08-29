@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
@@ -14,6 +15,15 @@ from joltik.routes.interactions import router as interaction_router
 from joltik.routes.services import router as service_router
 
 app = FastAPI(title="Customer Relationship Management application")
+
+# Allow React app to access the FastAPI backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(service_router, prefix="/service")
 app.include_router(customer_router, prefix="/customer")
