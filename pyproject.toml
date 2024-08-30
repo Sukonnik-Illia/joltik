@@ -60,6 +60,7 @@ ignore = [
     "ISC001",  # Implicitly concatenated string literals on one line
     "PLR0912", # Too many branches (13 > 12)
     "PTH123",  # `open()` should be replaced by `Path.open()`
+    "S311",    # Standard pseudo-random generators are not suitable for cryptographic purposes
 ]
 
 [tool.ruff.format]

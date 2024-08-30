@@ -5,15 +5,16 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 
-from joltik.db import DBAsyncSession
 from joltik.models import Customers
 from joltik.models.customers import LeadStatus
+from joltik.session import DBAsyncSession
 
 router = APIRouter()
 
 
 class CustomerCreate(BaseModel):
     model_config: ConfigDict = ConfigDict(from_attributes=True)
+    # , extra="forbid"
 
     company_name: str
     industry: str

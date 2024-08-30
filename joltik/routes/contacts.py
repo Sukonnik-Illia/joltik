@@ -5,8 +5,8 @@ from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from joltik.db import DBAsyncSession
 from joltik.models import Contacts, Customers
+from joltik.session import DBAsyncSession
 
 router = APIRouter()
 

@@ -2,7 +2,7 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from joltik.models import Services
-from joltik.models.tables_faker_data import generate_contact, generate_customer, generate_deal
+from joltik.models.factories import ContactsFactory, CustomersFactory, DealsFactory
 from joltik.routes.deals import DealCreate, DealUpdate
 from joltik.routes.services import ServiceCreate
 from tests.test_contacts import contact_to_pydantic
@@ -15,15 +15,17 @@ def test_deals_CRUD(client: TestClient) -> None:
     assert resp.json() == []
 
     # Test for POST deal
-    customer_sqla = generate_customer()
+    customer_sqla = CustomersFactory()
     customer_dict = customer_to_pydantic(customer_sqla).model_dump(mode="json")
     customer_pyd = client.post("/customer", json=customer_dict)
+    assert customer_pyd.status_code == status.HTTP_201_CREATED
     customer_sqla.id = customer_pyd.json()["id"]
 
-    contact_sqla = generate_contact(customer_sqla)
+    contact_sqla = ContactsFactory(customer=customer_sqla)
     contact_dict = contact_to_pydantic(contact_sqla).model_dump(mode="json")
-    resp = client.post("/contact", json=contact_dict)
-    contact_sqla.id = resp.json()["id"]
+    contact_pyd = client.post("/contact", json=contact_dict)
+    assert contact_pyd.status_code == status.HTTP_201_CREATED
+    contact_sqla.id = contact_pyd.json()["id"]
 
     service_sqla = Services(
         service_type="SEO",
@@ -33,10 +35,10 @@ def test_deals_CRUD(client: TestClient) -> None:
     service_pyd = client.post("/service", json=service_dict)
     service_sqla.id = service_pyd.json()["id"]
 
-    deal_sqla = generate_deal(customer=customer_sqla, contact=contact_sqla, service=service_sqla)
-    deal_sqla.service_fk = service_sqla.id
-    deal_sqla.customer_fk = customer_sqla.id
-    deal_sqla.contact_fk = contact_sqla.id
+    deal_sqla = DealsFactory(customer=customer_sqla, contact=contact_sqla, service=service_sqla)
+    # deal_sqla.service_fk = service_sqla.id
+    # deal_sqla.customer_fk = customer_sqla.id
+    # deal_sqla.contact_fk = contact_sqla.id
     deal_dict = DealCreate.model_validate(deal_sqla).model_dump(mode="json")
 
     resp = client.post("/deal", json=deal_dict)
@@ -57,17 +59,17 @@ def test_deals_CRUD(client: TestClient) -> None:
     new_service_pyd = client.post("/service", json=new_service_dict)
     new_service_sqla.id = new_service_pyd.json()["id"]
 
-    new_customer_sqla = generate_customer()
+    new_customer_sqla = CustomersFactory()
     new_customer_dict = customer_to_pydantic(new_customer_sqla).model_dump(mode="json")
     new_customer_pyd = client.post("/customer", json=new_customer_dict)
     new_customer_sqla.id = new_customer_pyd.json()["id"]
 
-    new_contact1_sqla = generate_contact(new_customer_sqla)
+    new_contact1_sqla = ContactsFactory(customer=new_customer_sqla)
     new_contact1_dict = contact_to_pydantic(new_contact1_sqla).model_dump(mode="json")
     new_contact1_pyd = client.post("/contact", json=new_contact1_dict)
     new_contact1_sqla.id = new_contact1_pyd.json()["id"]
 
-    new_contact2_sqla = generate_contact(new_customer_sqla)
+    new_contact2_sqla = ContactsFactory(customer=new_customer_sqla)
     new_contact2_dict = contact_to_pydantic(new_contact2_sqla).model_dump(mode="json")
     new_contact2_pyd = client.post("/contact", json=new_contact2_dict)
     new_contact2_sqla.id = new_contact2_pyd.json()["id"]
