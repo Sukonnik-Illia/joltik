@@ -16,7 +16,7 @@ pydantic = "^2.7.3"
 pydantic-settings = "^2.3.2"
 psycopg = "^3.1.19"
 fastapi = "^0.111.0"
-fastapi-users = { extras = ["sqlalchemy"], version = "^13.0.0" }
+pytest = "^8.2.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.3"
@@ -59,6 +59,7 @@ ignore = [
     "ISC001",  # Implicitly concatenated string literals on one line
     "PLR0912", # Too many branches (13 > 12)
     "PTH123",  # `open()` should be replaced by `Path.open()`
+    "S311",    # Standard pseudo-random generators are not suitable for cryptographic purposes
 ]
 
 [tool.ruff.format]

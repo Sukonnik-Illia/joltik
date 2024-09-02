@@ -6,10 +6,10 @@ from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from joltik.db import DBAsyncSession
 from joltik.errors import EntityDoesNotExistError
 from joltik.models import Contacts, Customers, Deals, Services
 from joltik.models.deals import Deal_stage, Deal_type
+from joltik.session import DBAsyncSession
 
 router = APIRouter()
 

@@ -1,15 +1,13 @@
 from datetime import datetime
 from typing import AsyncGenerator
 
-from fastapi import Depends
 from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
 from sqlalchemy import Boolean, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from joltik.db import get_async_session
 from joltik.models.user_roles import Role
+from joltik.session import DBAsyncSession
 
 
 class Base(DeclarativeBase):
@@ -29,5 +27,5 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     role_fk: Mapped[UUID] = mapped_column(UUID(as_uuid=True), ForeignKey(Role.id))
 
 
-async def get_user_db(session: AsyncSession = Depends(get_async_session)) -> AsyncGenerator:
+async def get_user_db(session: DBAsyncSession) -> AsyncGenerator:
     yield SQLAlchemyUserDatabase(session, User)

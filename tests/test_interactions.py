@@ -4,10 +4,10 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from joltik.models import Interactions
-from joltik.models.tables_faker_data import (
-    generate_contact,
-    generate_customer,
-    generate_interaction,
+from joltik.models.factories import (
+    ContactsFactory,
+    CustomersFactory,
+    InteractionsFactory,
 )
 from joltik.routes.interactions import InteractionCreate, InteractionUpdate
 from tests.test_contacts import contact_to_pydantic
@@ -24,54 +24,56 @@ def test_interactions_CRUD(client: TestClient) -> None:
     assert resp.json() == []
 
     # Test for POST interaction
-    customer_sqla = generate_customer()
+    customer_sqla = CustomersFactory()
     customer_dict = customer_to_pydantic(customer_sqla).model_dump(mode="json")
     customer_pyd = client.post("/customer", json=customer_dict)
+    assert customer_pyd.status_code == status.HTTP_201_CREATED
     customer_sqla.id = customer_pyd.json()["id"]
 
-    contact1_sqla = generate_contact(customer_sqla)
-    contact1_dict = contact_to_pydantic(contact1_sqla).model_dump(mode="json")
-    contact1_pyd = client.post("/contact", json=contact1_dict)
-    contact1_sqla.id = contact1_pyd.json()["id"]
+    contacts_sqla = ContactsFactory.create_batch(2, customer=customer_sqla)
+    for contact in contacts_sqla:
+        contact_dict = contact_to_pydantic(contact).model_dump(mode="json")
+        resp = client.post("/contact", json=contact_dict)
+        assert resp.status_code == status.HTTP_201_CREATED
+        contact.id = resp.json()["id"]
 
-    contact2_sqla = generate_contact(customer_sqla)
-    contact2_dict = contact_to_pydantic(contact2_sqla).model_dump(mode="json")
-    contact2_pyd = client.post("/contact", json=contact2_dict)
-    contact2_sqla.id = contact2_pyd.json()["id"]
-
-    new_interaction_sqla_list, interaction_contacts_sqla_list = generate_interaction(
-        customer=customer_sqla,
-        contacts=[contact1_sqla, contact2_sqla],
-        num_interactions=1,
-    )
-    # generate interaction() doesn't return customer_fk (only relation)
-    # contacts list is returned to interaction_contacts_sqla_list
-    new_interaction_sqla = new_interaction_sqla_list[0]
-    new_interaction_sqla.customer_fk = customer_sqla.id
-    contacts = [contact1_sqla, contact2_sqla]
-    new_interaction_sqla.contacts = contacts
-
-    new_interaction_dict = interaction_to_pydantic(new_interaction_sqla).model_dump(mode="json")
-    resp = client.post("/interaction", json=new_interaction_dict)
+    interaction_sqla = InteractionsFactory(customer=customer_sqla, contacts=contacts_sqla)
+    interaction_dict = interaction_to_pydantic(interaction_sqla).model_dump(mode="json")
+    resp = client.post("/interaction", json=interaction_dict)
     assert resp.status_code == status.HTTP_201_CREATED
     interaction_id = resp.json()["id"]
-    returned_interaction = {"id": interaction_id, **new_interaction_dict}
+    returned_interaction = {"id": interaction_id, **interaction_dict}
     assert resp.json() == returned_interaction
-    # resp = client.get("/contact")
-    # assert resp.status_code == status.HTTP_200_OK
-    # assert resp.json() == [returned_contact]
 
+    # new_interaction_sqla_list, interaction_contacts_sqla_list = generate_interaction(
+    #     customer=customer_sqla,
+    #     contacts=contacts_sqla,
+    #     num_interactions=1,
+    # )
+    # new_interaction_sqla = new_interaction_sqla_list[0]
+    # new_interaction_sqla.customer_fk = customer_sqla.id
+    # contacts = contacts_sqla
+    # new_interaction_sqla.contacts = contacts
+
+    # new_interaction_dict = interaction_to_pydantic(new_interaction_sqla).model_dump(mode="json")
+    # resp = client.post("/interaction", json=new_interaction_dict)
+    # assert resp.status_code == status.HTTP_201_CREATED
+    # interaction_id = resp.json()["id"]
+    # returned_interaction = {"id": interaction_id, **new_interaction_dict}
+    # assert resp.json() == returned_interaction
+
+    # Test for GET interaction by id
     resp = client.get(f"/interaction/{interaction_id}")
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == returned_interaction
 
     # Test for UPDATE interaction by id
-    new_customer_sqla = generate_customer()
+    new_customer_sqla = CustomersFactory()
     new_customer_dict = customer_to_pydantic(new_customer_sqla).model_dump(mode="json")
     new_customer_pyd = client.post("/customer", json=new_customer_dict)
     new_customer_sqla.id = new_customer_pyd.json()["id"]
 
-    new_contact1_sqla = generate_contact(new_customer_sqla)
+    new_contact1_sqla = ContactsFactory(customer=new_customer_sqla)
     new_contact1_dict = contact_to_pydantic(new_contact1_sqla).model_dump(mode="json")
     new_contact1_pyd = client.post("/contact", json=new_contact1_dict)
     new_contact1_sqla.id = new_contact1_pyd.json()["id"]
@@ -89,8 +91,8 @@ def test_interactions_CRUD(client: TestClient) -> None:
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json() == updated_inter_both_dict
 
-    # Test for UPDATE interaction - contacts only
-    new_contact2_sqla = generate_contact(new_customer_sqla)
+    # Test for update - contacts only
+    new_contact2_sqla = ContactsFactory(customer=new_customer_sqla)
     new_contact2_dict = contact_to_pydantic(new_contact2_sqla).model_dump(mode="json")
     new_contact2_pyd = client.post("/contact", json=new_contact2_dict)
     new_contact2_sqla.id = new_contact2_pyd.json()["id"]
@@ -134,10 +136,9 @@ def test_interactions_CRUD(client: TestClient) -> None:
     assert resp.status_code == status.HTTP_404_NOT_FOUND
 
     # Delete all data from DB
-    resp = client.delete(f"/contact/{contact1_sqla.id}")
-    assert resp.status_code == status.HTTP_204_NO_CONTENT
-    resp = client.delete(f"/contact/{contact2_sqla.id}")
-    assert resp.status_code == status.HTTP_204_NO_CONTENT
+    for contact in contacts_sqla:
+        resp = client.delete(f"/contact/{contact.id}")
+        assert resp.status_code == status.HTTP_204_NO_CONTENT
     resp = client.delete(f"/contact/{new_contact1_sqla.id}")
     assert resp.status_code == status.HTTP_204_NO_CONTENT
     resp = client.delete(f"/contact/{new_contact2_sqla.id}")

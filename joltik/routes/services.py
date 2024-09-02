@@ -5,9 +5,9 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import select
 
-from joltik.db import DBAsyncSession
 from joltik.models import Services
 from joltik.models.services import Service as ServiceType
+from joltik.session import DBAsyncSession
 
 router = APIRouter()
 
