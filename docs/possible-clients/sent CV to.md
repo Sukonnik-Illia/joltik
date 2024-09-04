@@ -20,6 +20,10 @@ They are taking care for the payment not the cient
 [Deal](https://www.deel.com/) platform for money transfers.
 
 ## Ciklum
+## Criteo
+https://www.linkedin.com/in/lenacriteo/
+
+https://careers.criteo.com/en/jobs/r18203/backend-developer/
 
 ## Computools - Python Technology Lead
 telegram: @Anastasiia_Computools
@@ -52,20 +56,61 @@ Fastapi/Djano, Redis, Docker, Async experience
 - CTO hr director
 
 ## DataRobot
+liliia.aleksandrova@datarobot.com
 ## DBB Software
 https://jobs.dou.ua/companies/dbb-software/vacancies/278829/?from=applications
+
 ## Devox Software
 https://jobs.dou.ua/companies/devox-software/vacancies/277879/?from=applications
 telegram: @ira_mishchuk
+Sweden and Sweden timezone
+
+4200$ gross
+Influencers Marketing platform (Nike, ) search of influencers
+
+6 years on market
+Long term project
+All team on side of Devox
+There is part of .Net + Angular
+
+python 2, qa, DevOps, Project Manager
+B2B and Ukrainian Fop
+20 vacation after probation period
+10 sick leave
+
+### interview stages
+- technical 1 hour
+- manager interview
+- client interview
 
 ## Evowill - Python Mentor
 https://jobs.dou.ua/companies/evowill/vacancies/278826/?from=applications
+[04-04-2024]
+inna.liakhimetz@evowill.com
+python mentor
+
+part time 10-15 hours per week
+Fixed price not hourly rate 1000$ probation period
+- tech interview with mentor
+15 junior developers
+
+Learning Program present
+
+code review
+reccomendations for students
+mok interviews
+answers for questions (telegram)
+3 meets per week (with students) Lecture/practice
+they have petproject (all materials are present)
+
+
 ## Flyaps - Tech Lead. Python
 https://jobs.dou.ua/companies/flyaps/vacancies/274609/?from=applications
 ## INFUSE
 ## Mellifera
 https://jobs.dou.ua/companies/mellifera-operations-limited/vacancies/277183/?from=applications
 ## MWDN
+5+ gross
 https://jobs.dou.ua/companies/mwdn/vacancies/250064/?from=applications
 telegram: @recruiter_mwdn
 outstaff
