@@ -2,7 +2,7 @@
 [02-09-2024]
 recruitment@lembergsolutions.com
 розглядаємо співпрацю виключно в межах України.
-
+https://jobs.dou.ua/companies/lemberg-solutions/vacancies/274948/?from=applications
 ## Kozak Group
 [02-09-2024]
 Yana Martyniuk: https://www.linkedin.com/in/yana-martyniuk/
