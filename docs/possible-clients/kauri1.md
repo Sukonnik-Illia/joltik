@@ -15,6 +15,7 @@ not trackers
 14 робочих днів відпустки (сікліви туди входять)
 
 # Job Description
+https://jobs.dou.ua/companies/kauri-one/vacancies/275875/?from=applications
 Python Developer (fintech experience)
  за кордоном
 Kauri One is a software development company that creates Fintech-blockchain projects. We implement the entire range of financial instruments for processing fiat and cryptocurrencies in one system. Right now we are looking for a passionate Python Developer with fintech experience to join our team.
