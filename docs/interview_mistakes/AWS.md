@@ -34,5 +34,47 @@ transactions per second limit (more expencive)
 
 # SNS - Simple Notification Service
 Message publishing and processing service
+Messages can be sent to:
+- HTTP post request
+- email and email-JSON
+- SQS
+- SMS - only registered phone numbers
+## topics
+Can copies messages to different queues
+## Subscriptions
 
-topics - can copies messages to different queues
+# DynamoDB
+document storage
+
+# Aurora
+AWS SQL engine (MySQL or PostgreSQL compatible)
+
+# Cognito
+Auth and Authorize service
+# Aplify
+
+# ECS - Elasctic Container Service
+Something like Kubernetes but amazon locked, easier to start with but not so portable
+# EKS - Elastic Kubertetes Service
+
+# Secrets Manager
+
+# EC2 - Elastic Compute Cloud
+Just virtual machine
+
+# API Gateway
+
+# DBs
+- RDS Relational Database Service with different engines. Aws just manages backups and scaling for you
+- DocumentDB - Managed MongoDB
+- DynamoDB - Key value lookups
+- Opensearch - AWS version of Elasticsearch
+
+# Cache
+- ElastiCache - Memcache/Redis version
+- CloudFront - Caching resorses (S3 and something elese)
+
+# Kinesis
+Massive events (like user hovering on something or clicks)
+
+# Step Functions

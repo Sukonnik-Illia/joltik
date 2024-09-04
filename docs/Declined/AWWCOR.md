@@ -1,11 +1,13 @@
 # Interactions
+## Decision
+Declined
 ## linkedin
 Yanina Serdiuk
 https://www.linkedin.com/in/yanina-serdiuk-316a5b225/
 ## email from Belen Juarez
 ## call with Valeria Batison
 
-american farmacurical services
+american farmasutical services
 https://edetek.com/
 automation for clinical
 eastern european time
@@ -24,7 +26,7 @@ Role Description
 We are looking for a Python Developer who can work in a dynamic, fast-paced, and highly regulated biotech environment.
 
 
-
+* not Jira - Spira
 Required professional skills:
 
 Enterprise-grade qualities: experience with application architecture, necessarily with large and complex data transactions in government-regulated areas only* and across multiple systems.
