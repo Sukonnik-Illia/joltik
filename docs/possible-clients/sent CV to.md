@@ -4,22 +4,6 @@ https://jobs.dou.ua/companies/adaptiq/vacancies/277731/?from=applications
 ## Agiliway
 https://jobs.dou.ua/companies/agiliway/vacancies/278575/?from=applications
 ## Altamira
-## Altabel
-altabel.com
-35$ per hour gross
-Evgenia Spynu: https://www.linkedin.com/in/evgenia-spynu-016a6330a/
-Svetlana Lyudchik: https://www.linkedin.com/in/svetlana-lyudchik-0359531b0/
-switserland, norway, USA
-B2B contract, can be cryptocurrency
-
-per project, don't have bench
-Client will share technical part later
-
-### hiring process
-- CV in format of company
-- hiring manager call (she tracks communication with client)
-- NDA
-- interview with client
 
 ## Andela
 https://www.linkedin.com/in/azer-denjo-ab2151239/
@@ -42,7 +26,7 @@ telegram: @Anastasiia_Computools
 https://jobs.dou.ua/companies/computools/vacancies/278371/?from=applications
 ## CONCRYT
 [04-09-2024]
-up to 7 gross
+up to 7k gross
 telegram: @V_Olga_work
 https://concryt.io/careers/python-engineer
 Olga Vilner
