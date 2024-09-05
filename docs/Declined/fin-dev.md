@@ -1,4 +1,5 @@
 # Fin.dev
+Angelika Kihno <angelika.kihno@findevglobal.com>
 otustaff
 13 people devs frontend devops, java
 high load

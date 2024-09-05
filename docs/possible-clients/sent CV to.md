@@ -1,4 +1,24 @@
 # Through Dou.ua
+## Altabel
+### Decision
+On hold [04-09-2024] Evgenia Spynu
+### Details
+altabel.com
+35$ per hour gross
+Evgenia Spynu: https://www.linkedin.com/in/evgenia-spynu-016a6330a/
+Svetlana Lyudchik: https://www.linkedin.com/in/svetlana-lyudchik-0359531b0/
+switserland, norway, USA
+B2B contract, can be cryptocurrency
+
+per project, don't have bench
+Client will share technical part later
+
+### hiring process
+- CV in format of company
+- hiring manager call (she tracks communication with client)
+- NDA
+- interview with client
+
 ## Adaptiq
 https://jobs.dou.ua/companies/adaptiq/vacancies/277731/?from=applications
 ## Agiliway
@@ -21,7 +41,7 @@ They are taking care for the payment not the cient
 
 ## Ciklum
 ## Criteo
-https://www.linkedin.com/in/lenacriteo/
+Lena Blinova: https://www.linkedin.com/in/lenacriteo/
 
 https://careers.criteo.com/en/jobs/r18203/backend-developer/
 
@@ -57,6 +77,24 @@ Fastapi/Djano, Redis, Docker, Async experience
 
 ## DataRobot
 liliia.aleksandrova@datarobot.com
+6300$ gross
+Restricted stocks units (Was no IPO yet)
+[05-09-2024] - HR interview
+Kyiv time
+Once per week meet with US part of team.
+Product company specializing in DataAnalytics vs Ml, predictions...
+case Us federal project COVID related
+crops growing prediction...
+Seniour Backend engineer in mlops team.
+Infrastracture for Ml
+Python, Go, Java
+all three AWS, GCP, Asure
+
+### processes
+- hiring manager + Lid + test task (1 hour)
+- coding
+- system design
+
 ## DBB Software
 https://jobs.dou.ua/companies/dbb-software/vacancies/278829/?from=applications
 
