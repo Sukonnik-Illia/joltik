@@ -1,5 +1,5 @@
 13
-Dariia Zakharchenko
+Dariia Zakharchenko <d.zakharchenko@kauri.one>
 крипто гаманець
 2 бека 3 фронта
 2 девопса та 2 qa

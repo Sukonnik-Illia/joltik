@@ -1,4 +1,46 @@
 # Through Dou.ua
+## Altabel
+### Decision
+On hold [04-09-2024] Evgenia Spynu
+### Details
+altabel.com
+35$ per hour gross
+Evgenia Spynu: https://www.linkedin.com/in/evgenia-spynu-016a6330a/
+Svetlana Lyudchik: https://www.linkedin.com/in/svetlana-lyudchik-0359531b0/
+switserland, norway, USA
+B2B contract, can be cryptocurrency
+
+per project, don't have bench
+Client will share technical part later
+
+### hiring process
+- CV in format of company
+- hiring manager call (she tracks communication with client)
+- NDA
+- interview with client
+### responcibilities
+Key Responsibilities:
+● Lead and mentor an Eastern European engineering team, ensuring effective
+coordination and communication.
+● Collaborate with product and engineering leadership to align team priorities and goals.
+● Provide technical leadership and guidance to the team, fostering a culture of excellence and
+innovation.
+● Design and develop scalable, maintainable, and efficient systems.
+● Participate in code reviews, offering constructive feedback to peers and fostering a
+collaborative development environment.
+● Troubleshoot and resolve technical issues while optimizing software performance.
+● Stay up-to-date with emerging trends and technologies in software development, actively
+exploring opportunities for innovation.
+What we’re looking for:
+● At least 2 years of experience in a tech lead role.
+● At least 8 years of experience developing large production systems.
+● Strong familiarity with agile methodologies.
+● Excellent organizational and leadership skills.
+● Ability to effectively communicate and collaborate with cross-functional teams.
+● Strong problem-solving skills and a results-oriented mindset.
+● Experience working with cross-functional teams across different regions.
+● Proficiency in modern software engineering principles and database design.
+
 ## Adaptiq
 https://jobs.dou.ua/companies/adaptiq/vacancies/277731/?from=applications
 ## Agiliway
@@ -21,7 +63,7 @@ They are taking care for the payment not the cient
 
 ## Ciklum
 ## Criteo
-https://www.linkedin.com/in/lenacriteo/
+Lena Blinova: https://www.linkedin.com/in/lenacriteo/
 
 https://careers.criteo.com/en/jobs/r18203/backend-developer/
 
@@ -57,6 +99,24 @@ Fastapi/Djano, Redis, Docker, Async experience
 
 ## DataRobot
 liliia.aleksandrova@datarobot.com
+6300$ gross
+Restricted stocks units (Was no IPO yet)
+[05-09-2024] - HR interview
+Kyiv time
+Once per week meet with US part of team.
+Product company specializing in DataAnalytics vs Ml, predictions...
+case Us federal project COVID related
+crops growing prediction...
+Seniour Backend engineer in mlops team.
+Infrastracture for Ml
+Python, Go, Java
+all three AWS, GCP, Asure
+
+### processes
+- hiring manager + Lid + test task (1 hour)
+- coding
+- system design
+
 ## DBB Software
 https://jobs.dou.ua/companies/dbb-software/vacancies/278829/?from=applications
 
@@ -83,25 +143,7 @@ B2B and Ukrainian Fop
 - manager interview
 - client interview
 
-## Evowill - Python Mentor
-https://jobs.dou.ua/companies/evowill/vacancies/278826/?from=applications
-[04-04-2024]
-inna.liakhimetz@evowill.com
-python mentor
 
-part time 10-15 hours per week
-Fixed price not hourly rate 1000$ probation period
-- tech interview with mentor
-15 junior developers
-
-Learning Program present
-
-code review
-reccomendations for students
-mok interviews
-answers for questions (telegram)
-3 meets per week (with students) Lecture/practice
-they have petproject (all materials are present)
 
 
 ## Flyaps - Tech Lead. Python

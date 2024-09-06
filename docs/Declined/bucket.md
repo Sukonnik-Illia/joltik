@@ -18,22 +18,25 @@ Only Gig contract (ukrainian special type of contracts)
 telegram: @vr_leba
 2500 gross
 
-## Altabel
-### Decision
-On hold [04-09-2024] Evgenia Spynu
-### Details
-altabel.com
-35$ per hour gross
-Evgenia Spynu: https://www.linkedin.com/in/evgenia-spynu-016a6330a/
-Svetlana Lyudchik: https://www.linkedin.com/in/svetlana-lyudchik-0359531b0/
-switserland, norway, USA
-B2B contract, can be cryptocurrency
+## Evowill - Python Mentor
+https://jobs.dou.ua/companies/evowill/vacancies/278826/?from=applications
+[05-09-2024] - Declined via dou.ua
+asked about reasons via email
 
-per project, don't have bench
-Client will share technical part later
+[04-04-2024]
+inna.liakhimetz@evowill.com
+python mentor
 
-### hiring process
-- CV in format of company
-- hiring manager call (she tracks communication with client)
-- NDA
-- interview with client
+part time 10-15 hours per week
+Fixed price not hourly rate 1000$ probation period
+- tech interview with mentor
+15 junior developers
+
+Learning Program present
+
+code review
+reccomendations for students
+mok interviews
+answers for questions (telegram)
+3 meets per week (with students) Lecture/practice
+they have petproject (all materials are present)
