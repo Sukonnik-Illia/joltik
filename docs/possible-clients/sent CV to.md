@@ -121,25 +121,7 @@ B2B and Ukrainian Fop
 - manager interview
 - client interview
 
-## Evowill - Python Mentor
-https://jobs.dou.ua/companies/evowill/vacancies/278826/?from=applications
-[04-04-2024]
-inna.liakhimetz@evowill.com
-python mentor
 
-part time 10-15 hours per week
-Fixed price not hourly rate 1000$ probation period
-- tech interview with mentor
-15 junior developers
-
-Learning Program present
-
-code review
-reccomendations for students
-mok interviews
-answers for questions (telegram)
-3 meets per week (with students) Lecture/practice
-they have petproject (all materials are present)
 
 
 ## Flyaps - Tech Lead. Python
