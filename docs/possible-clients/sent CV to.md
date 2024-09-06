@@ -18,6 +18,28 @@ Client will share technical part later
 - hiring manager call (she tracks communication with client)
 - NDA
 - interview with client
+### responcibilities
+Key Responsibilities:
+● Lead and mentor an Eastern European engineering team, ensuring effective
+coordination and communication.
+● Collaborate with product and engineering leadership to align team priorities and goals.
+● Provide technical leadership and guidance to the team, fostering a culture of excellence and
+innovation.
+● Design and develop scalable, maintainable, and efficient systems.
+● Participate in code reviews, offering constructive feedback to peers and fostering a
+collaborative development environment.
+● Troubleshoot and resolve technical issues while optimizing software performance.
+● Stay up-to-date with emerging trends and technologies in software development, actively
+exploring opportunities for innovation.
+What we’re looking for:
+● At least 2 years of experience in a tech lead role.
+● At least 8 years of experience developing large production systems.
+● Strong familiarity with agile methodologies.
+● Excellent organizational and leadership skills.
+● Ability to effectively communicate and collaborate with cross-functional teams.
+● Strong problem-solving skills and a results-oriented mindset.
+● Experience working with cross-functional teams across different regions.
+● Proficiency in modern software engineering principles and database design.
 
 ## Adaptiq
 https://jobs.dou.ua/companies/adaptiq/vacancies/277731/?from=applications
