@@ -45,8 +45,6 @@ What we’re looking for:
 https://jobs.dou.ua/companies/adaptiq/vacancies/277731/?from=applications
 ## Agiliway
 https://jobs.dou.ua/companies/agiliway/vacancies/278575/?from=applications
-## Altamira
-
 ## Andela
 https://www.linkedin.com/in/azer-denjo-ab2151239/
 contractor position (1 year guaranteed)
@@ -64,12 +62,19 @@ They are taking care for the payment not the cient
 ## Ciklum
 ## Criteo
 Lena Blinova: https://www.linkedin.com/in/lenacriteo/
+ad tech company.
+Machine learning to deliver ads to people.
+Retail media platform targeting consumers on clients websites.
+team Commis grid for the platform
+2 teams
+3 engineers who working on UIs
+Real time application, milions requests per second.
+Hibrid Limassol (few visits per)
+
 
 https://careers.criteo.com/en/jobs/r18203/backend-developer/
 
-## Computools - Python Technology Lead
-telegram: @Anastasiia_Computools
-https://jobs.dou.ua/companies/computools/vacancies/278371/?from=applications
+
 ## CONCRYT
 [04-09-2024]
 up to 7k gross
@@ -123,6 +128,8 @@ https://jobs.dou.ua/companies/dbb-software/vacancies/278829/?from=applications
 ## Devox Software
 https://jobs.dou.ua/companies/devox-software/vacancies/277879/?from=applications
 telegram: @ira_mishchuk
+gather.town
+time tracker clockify
 Sweden and Sweden timezone
 
 4200$ gross
@@ -139,11 +146,9 @@ B2B and Ukrainian Fop
 10 sick leave
 
 ### interview stages
-- technical 1 hour
-- manager interview
-- client interview
-
-
+- [*] technical 1 hour
+- [*] manager interview
+- [ ] client interview
 
 
 ## Flyaps - Tech Lead. Python
@@ -208,32 +213,6 @@ https://jobs.dou.ua/companies/wesoftyou/vacancies/277805/?from=applications
 https://jobs.dou.ua/companies/windsor-ai/vacancies/278071/?from=applications
 ## WizardsDev
 https://jobs.dou.ua/companies/wizardsdev/vacancies/277366/?from=applications
-## YozmaTech
-https://jobs.dou.ua/companies/yozma-tech/vacancies/277536/?from=applications
-[03-09-2024]
-telegram: @sil6nser
-Data rails
-hiring company: https://yozmatech.com/
-https://www.datarails.com/
-Excel analyzer
-150 people
-Israel company
-5 backend developers (plans to hire 3 more)
-qa - 5
-ops
-Once a year should visit office in Wroclav and Israel
-B2B contract, Ukrainian FOP 3, Gig contracts
-
-15 working days
-7 sick leaves
-15 days off without payment
-Ukrainian
-english lessons
-Once a year salary review
-Work schedule from 9 to 18
-### interview process
-- general Python maybe some task
-- everything will be squeezed
 
 ## yalantis.net
 oksana.tyshkovets@yalantis.net
