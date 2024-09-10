@@ -7,7 +7,7 @@ mid summer 2025 deadline
 CTO in Cyprus
 pencion scheme
 after probation, company wehicle, full cover (tech )
-90-95 per year
+90-95k per year
 2 times per year (one month of salary)
 coffe, lunches
 
