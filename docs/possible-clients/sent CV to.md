@@ -45,6 +45,7 @@ What we’re looking for:
 https://jobs.dou.ua/companies/adaptiq/vacancies/277731/?from=applications
 ## Agiliway
 https://jobs.dou.ua/companies/agiliway/vacancies/278575/?from=applications
+## Altamira
 ## Andela
 https://www.linkedin.com/in/azer-denjo-ab2151239/
 contractor position (1 year guaranteed)
